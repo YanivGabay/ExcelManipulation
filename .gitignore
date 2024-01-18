@@ -1,0 +1,9 @@
+*.xls
+*.xlsx
+*.xlsm
+*.txt
+*.jpg
+*.zip
+__pycache__/
+output.csv
+tempCodeRunnerFile.py
