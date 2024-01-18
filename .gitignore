@@ -2,3 +2,4 @@
 *.xlsx
 *.xlsm
 __pycache__/
+output.csv
