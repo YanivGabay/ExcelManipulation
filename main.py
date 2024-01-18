@@ -95,7 +95,7 @@ def parse_line(line):
     #temp = line
     extracted_values = []
     for field_name, start, length in extraction_specs:
-        print(extract_mid(line, start, length))
+        #print(extract_mid(line, start, length))
         extracted_values.append(extract_mid(line, start, length))
     
     return extracted_values
@@ -156,6 +156,9 @@ root.maxsize(1200, 800)   # Maximum size of the window
 main_frame = ttk.Frame(root)
 main_frame.pack(fill='both', expand=True)
 
+style = ttk.Style(root)
+#print(style.theme_names())
+style.theme_use("clam")
 # Top frame for buttons and text box
 top_frame = ttk.Frame(main_frame)
 top_frame.pack(side='top', fill='x')
