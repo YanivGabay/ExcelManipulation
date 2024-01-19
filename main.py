@@ -25,7 +25,7 @@ def main():
     # Now create top frame with lambda functions for load_file and load_file_auto
     top_frame, text_area = gui_comp.create_top_frame(main_frame, lambda: file_proc.load_file(tree,text_area),
                                                       lambda: file_proc.load_file_auto(tree),
-                                                      lambda: file_proc.save_treeview_as_excel(tree, "ExportData.xlsx"))
+                                                      lambda: file_proc.save_to_excel(tree, "ExportData.xlsx",text_area))
     top_frame.pack(side='top', fill='x')
 
     root.mainloop()

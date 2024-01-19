@@ -19,8 +19,8 @@ def display_file_contents(file_path, tree, text_area):
                     processed_lines.append(processed_line)
 
                 contents = '\n'.join(processed_lines)
-                text_area.delete('1.0', tk.END)
-                text_area.insert(tk.END, contents)
+                #text_area.delete('1.0', tk.END)
+                #text_area.insert(tk.END, contents)
 
                 
                 file.seek(0)  # Reset file pointer to the beginning
@@ -51,7 +51,10 @@ def display_file_contents(file_path, tree, text_area):
                  update_address_po_box(tree, street_name_col_index, "address_po_box")   
                 else:
                    print("street_name column not found")
-                   
+
+
+                text_area.delete('1.0', tk.END)
+                text_area.insert(tk.END, "File loaded successfully.")     
             break
         except UnicodeDecodeError:
             continue
@@ -172,6 +175,16 @@ def setup_treeview(frame, extraction_specs):
     return tree
 
 
+
+def save_to_excel(tree,filename,textbox):
+    try:
+
+        save_treeview_as_excel(tree, filename)
+        textbox.delete('1.0', tk.END)
+        textbox.insert(tk.END, "File saved successfully.")
+    except Exception as e:
+        textbox.delete('1.0', tk.END)
+        textbox.insert(tk.END, f"Error reading file: {e}")
 
 def save_treeview_as_excel(tree, filename):
     # Extracting the column names
