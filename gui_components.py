@@ -14,8 +14,10 @@ def create_top_frame(parent, load_file_func, load_file_auto_func):
     return top_frame , text_area
 
 def create_bottom_frame(parent, extraction_specs):
+    
     bottom_frame = ttk.Frame(parent)
     tree = fp.setup_treeview(bottom_frame, extraction_specs)
+   
     y_scroll = ttk.Scrollbar(bottom_frame, orient="vertical", command=tree.yview)
     y_scroll.pack(side='right', fill='y')
     tree.configure(yscrollcommand=y_scroll.set)
@@ -23,4 +25,13 @@ def create_bottom_frame(parent, extraction_specs):
     x_scroll.pack(side='bottom', fill='x')
     tree.configure(xscrollcommand=x_scroll.set)
     tree.pack(side='left', fill='both', expand=True)
+
+
+
     return bottom_frame , tree
+
+
+
+
+
+
