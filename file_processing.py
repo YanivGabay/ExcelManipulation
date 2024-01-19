@@ -172,6 +172,23 @@ def setup_treeview(frame, extraction_specs):
     return tree
 
 
+
+def save_treeview_as_excel(tree, filename):
+    # Extracting the column names
+    columns = tree['columns']
+    
+    # Creating a list of dictionaries from the Treeview items
+    data = []
+    for item in tree.get_children():
+        row_data = tree.item(item, 'values')
+        row_dict = dict(zip(columns, row_data))
+        data.append(row_dict)
+    
+    # Creating a DataFrame and saving it as an Excel file
+    df = pd.DataFrame(data)
+    df.to_excel(filename, index=False)
+
+
 def update_with_combined_values(tree, private_col, family_col):
     for item in tree.get_children():
         row_data = list(tree.item(item, 'values'))
