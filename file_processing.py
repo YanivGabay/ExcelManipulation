@@ -145,8 +145,9 @@ def setup_treeview(frame, extraction_specs):
 def update_with_combined_values(tree, private_col, family_col):
     for item in tree.get_children():
         row_data = list(tree.item(item, 'values'))
-        private_value = row_data[private_col]
-        family_value = row_data[family_col]
+
+        private_value = row_data[private_col].strip()  # Remove leading/trailing spaces
+        family_value = row_data[family_col].strip()    # Remove leading/trailing spaces
 
         # Combine the values
         combined_value = private_value + " " + family_value
