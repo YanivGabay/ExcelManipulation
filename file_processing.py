@@ -37,12 +37,20 @@ def display_file_contents(file_path, tree, text_area):
                    print("Postal code column not found")
 
 
+                
+
                 private_col_index = find_column_index(tree, "private")
                 family_col_index = find_column_index(tree, "family")
                 if private_col_index and family_col_index  != -1:
                   update_with_combined_values(tree, private_col_index, family_col_index)
                 else:
                    print("Private or family column not found")
+
+                street_name_col_index = find_column_index(tree, "street_name")
+                if street_name_col_index != -1:
+                 update_address_po_box(tree, street_name_col_index, "address_po_box")   
+                else:
+                   print("street_name column not found")
                    
             break
         except UnicodeDecodeError:
@@ -117,6 +125,25 @@ def process_postal_codes(tree, postal_code_col):
 
    
 
+def update_address_po_box(tree, street_name_col, address_po_box_col):
+    for item in tree.get_children():
+        row_data = list(tree.item(item, 'values'))
+        street_name = row_data[street_name_col]
+
+        # Regex pattern to match 'תד', 'ת.ד', or 'ת"ד', followed by numbers
+        po_box_pattern = r'ת.*ד.*?(\d+)'
+
+        match = re.search(po_box_pattern, street_name)
+        if match:
+            po_box_number = match.group(1)  # Extract the number
+        else:
+            po_box_number = ''  # No match found
+
+        # Update the row with the PO Box number
+        row_data.append(po_box_number)
+        tree.item(item, values=row_data)
+
+
 
 
 def setup_treeview(frame, extraction_specs):
@@ -130,6 +157,8 @@ def setup_treeview(frame, extraction_specs):
     combined_col_name = "combined_private_family"
     tree['columns'] = list(tree['columns']) + [combined_col_name]
 
+    address_po_box_col = "address_po_box"
+    tree['columns'] = list(tree['columns']) + [address_po_box_col]
     # Configure the columns
     for col_id in column_ids:
         tree.heading(col_id, text=col_id)
@@ -137,7 +166,8 @@ def setup_treeview(frame, extraction_specs):
 
     tree.heading(combined_col_name, text="FullName")
     tree.column(combined_col_name, anchor=tk.W, width=100, stretch=False)
-       
+    tree.heading(address_po_box_col, text="Address PO Box")
+    tree.column(address_po_box_col, anchor=tk.W, width=100, stretch=False)   
 
     return tree
 

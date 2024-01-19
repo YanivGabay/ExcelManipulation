@@ -4,6 +4,10 @@ import gui_components as gui_comp
 import file_processing as file_proc
 import utilities as util
 
+#to ask gal:
+#about כתובת נהג תא דואר
+
+
 def main():
     root = tk.Tk()
     root.title("Text File Viewer")
