@@ -26,6 +26,9 @@ def display_file_contents(file_path, tree, text_area):
                     tree.insert("", tk.END, values=reversed_line)
 
                 file_loaded = True
+                text_area.delete('1.0', tk.END)
+                text_area.insert(tk.END, "Found and read the file. next step is post processing")
+                process_file(tree, text_area)
                 break  # Exit the loop if file is successfully processed
         except UnicodeDecodeError:
             # This exception will trigger if the encoding is incorrect
@@ -40,17 +43,19 @@ def display_file_contents(file_path, tree, text_area):
             return  # Exit the function
 
     if not file_loaded:
+        #if this delete will also delete text
+        #need to check and fix if that the  case
+        text = text_area.get("1.0", "end-1c")
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, "Error: Unable to read the file with the tried encodings.")
+        text_area.insert(tk.END, "Error: Unable to read the file with the tried encodings. Latest warning: " + text)
         return
-
+def process_file(tree, text_area):
     try:
         postal_code_col_index = find_column_index(tree, "postal_code")
         if postal_code_col_index != -1:
             process_postal_codes(tree, postal_code_col_index)
         else:
-             text_area.delete('1.0', tk.END)
-             text_area.insert(tk.END, "Postal code column not found")
+             raise ValueError("Postal code column not found")
             
 
         private_col_index = find_column_index(tree, "private")
@@ -58,21 +63,19 @@ def display_file_contents(file_path, tree, text_area):
         if private_col_index and family_col_index != -1:
             update_with_combined_values(tree, private_col_index, family_col_index)
         else:
-            text_area.delete('1.0', tk.END)
-            text_area.insert(tk.END, "Private or family column not found")
+             raise ValueError("Private or Family column not found")
            
         street_name_col_index = find_column_index(tree, "street_name")
         if street_name_col_index != -1:
             update_address_po_box(tree, street_name_col_index, "address_po_box")
         else:
-            text_area.delete('1.0', tk.END)
-            text_area.insert(tk.END, "street_name column not found")
-           
+             raise ValueError("StreetName column not found")
+       
 
     except Exception as e:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, f"Error during post-processing: {e}")
-
+    return
 
 def find_column_index(tree, column_name):
     columns = tree["columns"]
@@ -96,9 +99,6 @@ def load_file_auto(tree, text_area):
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "File not found.")
 
-
-def is_hebrew(s):
-    return bool(re.search('[\u0590-\u05FF]', s))
 
 
 def add_full_name(tree):
@@ -186,31 +186,6 @@ def setup_treeview(frame, extraction_specs):
 
     return tree
 
-
-def save_to_excel(tree, filename, textbox):
-    try:
-        save_treeview_as_excel(tree, filename)
-        textbox.delete('1.0', tk.END)
-        textbox.insert(tk.END, "File saved successfully.")
-    except Exception as e:
-        textbox.delete('1.0', tk.END)
-        textbox.insert(tk.END, f"Error reading file: {e}")
-
-
-def save_treeview_as_excel(tree, filename):
-    # Extracting the column names
-    columns = tree['columns']
-
-    # Creating a list of dictionaries from the Treeview items
-    data = []
-    for item in tree.get_children():
-        row_data = tree.item(item, 'values')
-        row_dict = dict(zip(columns, row_data))
-        data.append(row_dict)
-
-    # Creating a DataFrame and saving it as an Excel file
-    df = pd.DataFrame(data)
-    df.to_excel(filename, index=False)
 
 
 def update_with_combined_values(tree, private_col, family_col):
