@@ -16,7 +16,7 @@ def display_file_contents(file_path, tree, text_area):
         try:
             with open(file_path, 'r', encoding=encoding) as file:
                 # Clear the Treeview
-                tree.delete(*tree.get_children())
+                #tree.delete(*tree.get_children())
                 text_data = parse_text_file(file)
                 #debugg
                 number_of_records_to_print = 5  # You can adjust this number as needed
@@ -32,6 +32,9 @@ def display_file_contents(file_path, tree, text_area):
 
                 bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area)
                 transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area)
+
+                text_area.delete('1.0', tk.END)
+                text_area.insert(tk.END, "finished transfering data to the tree")
                 #transfer data 
                 #
                 break  # Exit the loop if file is successfully processed
@@ -56,23 +59,24 @@ def display_file_contents(file_path, tree, text_area):
         return
     
 def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area):
-
+    print("Number of rows in the tree:", len(tree.get_children()))
     try:
-     text_area.delete('1.0', tk.END)
-     text_area.insert(tk.END, "Transfering data to the tree")
-     for child in tree.get_children():
-        tree_item = tree.item(child)
-        tree_address = tree_item['values'][find_tree_column_index(tree,'address')]  # Adjust index as per your setup
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, "Transfering data to the tree")
+        for child in tree.get_children():
+            print("Processing tree child")  
+            tree_item = tree.item(child)
+            tree_address = tree_item['values'][find_tree_column_index(tree, 'Identifier')]
+            print("Tree Address:", tree_address)  # Debug print
 
-        for record in text_data:
-             if record[util.column_names[0]] == tree_address:
-                   # Update necessary cells in the tree with data from record
+            for record in text_data:
+                  print("Record Address:", record['address'])  # Debug print
+                  if record['address'] == tree_address:
+                        # Update necessary cells in the tree with data from record
                     update_tree_item(tree, child, record)
     except Exception as e:
-            
-     
-            text_area.delete('1.0', tk.END)
-            text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
                           # Highlight if in bad_records or highlighted_records
                # if record['Identifier'] in bad_records or record['Identifier'] in highlighted_records:
                   #  highlight_tree_item(tree, child)
