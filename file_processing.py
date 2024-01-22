@@ -18,14 +18,20 @@ def display_file_contents(file_path, tree, text_area):
                 # Clear the Treeview
                 tree.delete(*tree.get_children())
                 text_data = parse_text_file(file)
+                #debugg
+                number_of_records_to_print = 5  # You can adjust this number as needed
+                for i in range(min(number_of_records_to_print, len(text_data))):
+                     print(f"Record {i + 1}: {text_data[i]}")
+                     print() 
+
                 # Process each line in the file
                 file_loaded = True
                 text_area.delete('1.0', tk.END)
                 text_area.insert(tk.END, "Found and read the Text file.")
 
 
-                bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area,tree)
-                transfer_data_to_tree(tree,text_data,bad_records,highlighted_records)
+                bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area)
+                transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area)
                 #transfer data 
                 #
                 break  # Exit the loop if file is successfully processed
@@ -49,17 +55,25 @@ def display_file_contents(file_path, tree, text_area):
         text_area.insert(tk.END, "Error: Unable to read the file with the tried encodings. Latest warning: " + text)
         return
     
-def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records):
-    for child in tree.get_children():
-       tree_item = tree.item(child)
-       tree_address = tree_item['values'][find_tree_column_index(tree,'address')]  # Adjust index as per your setup
+def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area):
 
-       for record in text_data:
-            if record['Identifier'] == tree_address:
-                # Update necessary cells in the tree with data from record
-                update_tree_item(tree, child, record)
+    try:
+     text_area.delete('1.0', tk.END)
+     text_area.insert(tk.END, "Transfering data to the tree")
+     for child in tree.get_children():
+        tree_item = tree.item(child)
+        tree_address = tree_item['values'][find_tree_column_index(tree,'address')]  # Adjust index as per your setup
 
-                # Highlight if in bad_records or highlighted_records
+        for record in text_data:
+             if record[util.column_names[0]] == tree_address:
+                   # Update necessary cells in the tree with data from record
+                    update_tree_item(tree, child, record)
+    except Exception as e:
+            
+     
+            text_area.delete('1.0', tk.END)
+            text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
+                          # Highlight if in bad_records or highlighted_records
                # if record['Identifier'] in bad_records or record['Identifier'] in highlighted_records:
                   #  highlight_tree_item(tree, child)
 
@@ -74,17 +88,20 @@ def update_tree_item(tree, item, record):
     tree.item(item, values=current_values)
     
 def parse_text_file(file):
+     text_data = []
      for line in file:
                     # Parse and reverse Hebrew words, then insert into the tree
         parsed_line = parse_line(line)
         reversed_line = [util.reverse_word_if_hebrew(word) for word in parsed_line]
         column_names = [spec[0] for spec in util.extraction_specs]
-        text_data = dict(zip(column_names, reversed_line))
-        print(text_data)
+        #print(reversed_line)
+        single_line_data = dict(zip(column_names, reversed_line))
+        #print(single_line_data) 
+        text_data.append(single_line_data)
      return text_data               
 def proccess_record(record,text_area,bad_records,highlighted_records):
 
-   
+   try:
     record = proccess_postal_codes(record,highlighted_records,text_area)
 
   
@@ -92,9 +109,13 @@ def proccess_record(record,text_area,bad_records,highlighted_records):
 
   
     record = proccess_street_name(record,bad_records,text_area)
-
-
+    #print(record)
     return record
+   except Exception as e:
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, f"Error inside Process_record(): {e}")
+
+   
 
 def process_txt_file(text_data, text_area): 
     bad_records = []
@@ -103,12 +124,16 @@ def process_txt_file(text_data, text_area):
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Cleaning the data")
         for record in text_data:
-            record = proccess_record(record,text_area,bad_records,highlighted_records)
-            text_area.insert(tk.END,"found bad records:" + len(bad_records).__str__)        
+             if isinstance(record, dict):  # Ensure record is a dictionary
+                  record = proccess_record(record, text_area, bad_records, highlighted_records)
+             else:
+                  text_area.insert(tk.END, "Error: Record is not a dictionary.\n")
+             break  # Skip this record and continue with the next
 
     except Exception as e:
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, f"Error during post-processing: {e}")
+        text_area.insert(tk.END, f"Error process_txt_file: {e}")
+
     return bad_records,highlighted_records,text_data 
 def proccess_postal_codes(record,highlighted_records,text_area):
 
@@ -116,7 +141,7 @@ def proccess_postal_codes(record,highlighted_records,text_area):
         postal_code = record["postal_code"]
         if postal_code == '0000000':
             record["postal_code"] = 'zeros'
-            highlighted_records.append(record["Identifier"])
+            highlighted_records.append(record["address"])
             
             
         else:
@@ -128,8 +153,8 @@ def proccess_postal_codes(record,highlighted_records,text_area):
         return record      
   
 def proccess_full_name(record,bad_records,text_area): 
-    first_name = record.get('first_name', '').strip()
-    last_name = record.get('last_name', '').strip()
+    first_name = record.get('private', '').strip()
+    last_name = record.get('family', '').strip()
     record['full_name'] = f"{first_name} {last_name}"
     return record
     
@@ -137,7 +162,7 @@ def proccess_full_name(record,bad_records,text_area):
     
 
    
-def proccess_street_name(record,bad_records):
+def proccess_street_name(record,bad_records,text_area):
     
     street_name = record.get('street_name', '').strip()
     # Regex pattern to match 'תד', 'ת.ד', or 'ת"ד', followed by numbers
@@ -145,11 +170,7 @@ def proccess_street_name(record,bad_records):
     match = re.search(po_box_pattern, street_name)
     if match:
         record['po_box'] = match.group(1)  # Extract the number
-    else:
-       return   # No match found
-        
-
-    return
+    return record   
     '''
   
 def process_txt_file(tree, text_area):
