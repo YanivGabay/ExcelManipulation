@@ -9,7 +9,16 @@ def is_hebrew(s):
 
 def reverse_word_if_hebrew(word):
     return word[::-1] if is_hebrew(word) else word
-
+column_to_field_mapping = {
+    "Identifier": "address",
+    "Driver's Name": "family",
+    "Driver's Address-City": "city_name",
+    "Driver's Address-Street": "street_name",
+    "Driver's Address-House Number": "house_number",
+    "Driver's Address-PO Box": "po_box",
+    "Driver's Address-Zip Code": "postal_code",
+    # Add more mappings as needed...
+}
 column_names = [
     "Identifier",
     "Reporting Date",
@@ -53,7 +62,7 @@ extraction_specs = [
     ("filler", 6, 6),
     ("date", 12, 6),
     ("hour", 18, 4),
-    ("adress", 42, 6),
+    ("address", 42, 6),
       ("type_of_ownership", 48, 1),
       ("handicap", 49, 1),
        ("number_of_offend", 50, 4),

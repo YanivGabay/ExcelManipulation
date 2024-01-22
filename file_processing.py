@@ -17,18 +17,17 @@ def display_file_contents(file_path, tree, text_area):
             with open(file_path, 'r', encoding=encoding) as file:
                 # Clear the Treeview
                 tree.delete(*tree.get_children())
-
+                text_data = parse_text_file(file)
                 # Process each line in the file
-                for line in file:
-                    # Parse and reverse Hebrew words, then insert into the tree
-                    parsed_line = parse_line(line)
-                    reversed_line = [util.reverse_word_if_hebrew(word) for word in parsed_line]
-                    tree.insert("", tk.END, values=reversed_line)
-
                 file_loaded = True
                 text_area.delete('1.0', tk.END)
-                text_area.insert(tk.END, "Found and read the file. next step is post processing")
-                process_file(tree, text_area)
+                text_area.insert(tk.END, "Found and read the Text file.")
+
+
+                bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area,tree)
+                transfer_data_to_tree(tree,text_data,bad_records,highlighted_records)
+                #transfer data 
+                #
                 break  # Exit the loop if file is successfully processed
         except UnicodeDecodeError:
             # This exception will trigger if the encoding is incorrect
@@ -49,7 +48,111 @@ def display_file_contents(file_path, tree, text_area):
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Error: Unable to read the file with the tried encodings. Latest warning: " + text)
         return
-def process_file(tree, text_area):
+    
+def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records):
+    for child in tree.get_children():
+       tree_item = tree.item(child)
+       tree_address = tree_item['values'][find_tree_column_index(tree,'address')]  # Adjust index as per your setup
+
+       for record in text_data:
+            if record['Identifier'] == tree_address:
+                # Update necessary cells in the tree with data from record
+                update_tree_item(tree, child, record)
+
+                # Highlight if in bad_records or highlighted_records
+               # if record['Identifier'] in bad_records or record['Identifier'] in highlighted_records:
+                  #  highlight_tree_item(tree, child)
+
+def update_tree_item(tree, item, record):
+    current_values = list(tree.item(item, 'values'))
+
+    for tree_column, record_field in util.column_to_field_mapping.items():
+        if tree_column in tree['columns']:
+            column_index = tree['columns'].index(tree_column)
+            current_values[column_index] = record.get(record_field, '')
+
+    tree.item(item, values=current_values)
+    
+def parse_text_file(file):
+     for line in file:
+                    # Parse and reverse Hebrew words, then insert into the tree
+        parsed_line = parse_line(line)
+        reversed_line = [util.reverse_word_if_hebrew(word) for word in parsed_line]
+        column_names = [spec[0] for spec in util.extraction_specs]
+        text_data = dict(zip(column_names, reversed_line))
+        print(text_data)
+     return text_data               
+def proccess_record(record,text_area,bad_records,highlighted_records):
+
+   
+    record = proccess_postal_codes(record,highlighted_records,text_area)
+
+  
+    record = proccess_full_name(record,bad_records,text_area)
+
+  
+    record = proccess_street_name(record,bad_records,text_area)
+
+
+    return record
+
+def process_txt_file(text_data, text_area): 
+    bad_records = []
+    highlighted_records = []
+    try:
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, "Cleaning the data")
+        for record in text_data:
+            record = proccess_record(record,text_area,bad_records,highlighted_records)
+            text_area.insert(tk.END,"found bad records:" + len(bad_records).__str__)        
+
+    except Exception as e:
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, f"Error during post-processing: {e}")
+    return bad_records,highlighted_records,text_data 
+def proccess_postal_codes(record,highlighted_records,text_area):
+
+       
+        postal_code = record["postal_code"]
+        if postal_code == '0000000':
+            record["postal_code"] = 'zeros'
+            highlighted_records.append(record["Identifier"])
+            
+            
+        else:
+            # Process non-zero postal codes
+            # Assuming 7-digit postal code
+            postal_code = postal_code[2:] + postal_code[:2]
+            record["postal_code"] = postal_code
+    
+        return record      
+  
+def proccess_full_name(record,bad_records,text_area): 
+    first_name = record.get('first_name', '').strip()
+    last_name = record.get('last_name', '').strip()
+    record['full_name'] = f"{first_name} {last_name}"
+    return record
+    
+    #future check for insertiong into bad records
+    
+
+   
+def proccess_street_name(record,bad_records):
+    
+    street_name = record.get('street_name', '').strip()
+    # Regex pattern to match 'תד', 'ת.ד', or 'ת"ד', followed by numbers
+    po_box_pattern = r'ת.*ד.*?(\d+)'
+    match = re.search(po_box_pattern, street_name)
+    if match:
+        record['po_box'] = match.group(1)  # Extract the number
+    else:
+       return   # No match found
+        
+
+    return
+    '''
+  
+def process_txt_file(tree, text_area):
     try:
         postal_code_col_index = find_column_index(tree, "postal_code")
         if postal_code_col_index != -1:
@@ -76,8 +179,8 @@ def process_file(tree, text_area):
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, f"Error during post-processing: {e}")
     return
-
-def find_column_index(tree, column_name):
+'''
+def find_tree_column_index(tree, column_name):
     columns = tree["columns"]
     if column_name in columns:
         return columns.index(column_name)

@@ -15,8 +15,8 @@ This is a list of tasks that need to be completed.
 
 - **Description:** Need to fill מכתבי יידוע לפיתוח  with the values from the excel file
 - מכתבי ייוע לפתיוח SHOULD BE THE MAIN "SCREEN"
-- **Status:** 
-- **Due Date:** 
+- **Status:** starter working on it, soon to be working
+- **Due Date:** 25/1
 
 ### Task 3
 
