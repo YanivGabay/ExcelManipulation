@@ -89,15 +89,36 @@ def load_file(tree, text_area):
     display_file_contents(file_path, tree, text_area)
 
 
-def load_file_auto(tree, text_area):
-    current_date = datetime.now().strftime("%y%m%d")
-    file_name = f"GuardWayFrom_MOT_{current_date}.txt"
-    file_path = os.path.join(os.getcwd(), file_name)
-    if os.path.exists(file_path):
-        display_file_contents(file_path, tree, text_area)
-    else:
+def load_excel_orgin_file(tree, text_area):
+   file_loaded = False
+   try:
+        # Read the Excel file
+        file_path = filedialog.askopenfilename()
+        df = pd.read_excel(file_path)
+
+        # Clear the Treeview
+        tree.delete(*tree.get_children())
+
+        # Process each row in the DataFrame
+        for index, row in df.iterrows():
+            # Parse and reverse Hebrew words, then insert into the tree
+            # Assuming 'parse_line' and 'util.reverse_word_if_hebrew' can handle individual cell values
+            #reversed_row = [util.reverse_word_if_hebrew(word) if isinstance(word, str) else word for word in row]
+           #tree.insert("", tk.END, values=reversed_row)
+            
+             tree.insert("", tk.END, values=row.tolist())
+
+        file_loaded = True
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, "File not found.")
+        text_area.insert(tk.END, "Found and read the file. Next step is post processing")
+        
+
+   except Exception as e:
+        # Handle exceptions
+        text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, f"Error reading file: {e}")
+
+   return file_loaded
 
 
 
@@ -128,6 +149,7 @@ def process_postal_codes(tree, postal_code_col):
 
         # Check for all-zero postal codes and mark them
         if postal_code == '0000000':
+            #TO DO: replace the value in the tree with '';
             tree.item(item, tags=('zero_postal_code',))
             tree.tag_configure('zero_postal_code', background='#D19191', foreground='white')
 
@@ -161,11 +183,11 @@ def update_address_po_box(tree, street_name_col, address_po_box_col):
         tree.item(item, values=row_data)
 
 
-def setup_treeview(frame, extraction_specs):
+def setup_treeview(frame):
     tree = ttk.Treeview(frame)
 
     # Define the columns based on the extraction_specs
-    column_ids = [spec[0] for spec in extraction_specs]
+    column_ids = util.column_names
     tree['columns'] = column_ids
 
     # Add a combined column for the family and private columns

@@ -10,6 +10,41 @@ def is_hebrew(s):
 def reverse_word_if_hebrew(word):
     return word[::-1] if is_hebrew(word) else word
 
+column_names = [
+    "Identifier",
+    "Reporting Date",
+    "Reporting Time",
+    "Approval Date",
+    "Driver's Name",
+    "Driver's Address-City",
+    "Driver's Address-Street",
+    "Driver's Address-House Number",
+    "Driver's Address-PO Box",
+    "Driver's Address-Zip Code",
+    "License Number",
+    "Reported Location-Town",
+    "Reported Location-Street",
+    "Reported Location-Road",
+    "Number of Violations",
+    "Type of Violation 1",
+    "Type of Violation 2",
+    "Type of Violation 3",
+    "Link",
+    "Username",
+    "Access Code",
+    "Why Violation Is Serious 1",
+    "Why Violation Is Serious 2",
+    "Why Violation Is Serious 3",
+    "Possible Accident 1",
+    "Possible Accident 2",
+    "Possible Accident 3",
+    "Name of Violation Image File",
+    "Name of Barcode Image File",
+    "Type of Letter",
+    "Reported Location-Kilometer"
+]
+
+
 extraction_specs = [
     # (column_name, start_position, length)
     ("costumer_code", 1, 3),

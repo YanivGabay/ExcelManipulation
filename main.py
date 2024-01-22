@@ -19,12 +19,12 @@ def main():
     
       
     # Create bottom frame first to get the tree reference
-    bottom_frame, tree = gui_comp.create_bottom_frame(main_frame, util.extraction_specs)
+    bottom_frame, tree = gui_comp.create_bottom_frame(main_frame)
     bottom_frame.pack(fill='both', expand=True)
     
     # Now create top frame with lambda functions for load_file and load_file_auto
     top_frame, text_area = gui_comp.create_top_frame(main_frame, lambda: file_proc.load_file(tree,text_area),
-                                                      lambda: file_proc.load_file_auto(tree),
+                                                      lambda: file_proc.load_excel_orgin_file(tree,text_area),
                                                       lambda: export_service.save_to_excel(tree, "ExportData.xlsx",text_area))
     top_frame.pack(side='top', fill='x')
 
