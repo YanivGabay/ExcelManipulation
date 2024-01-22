@@ -19,10 +19,10 @@ def display_file_contents(file_path, tree, text_area):
                 #tree.delete(*tree.get_children())
                 text_data = parse_text_file(file)
                 #debugg
-                number_of_records_to_print = 5  # You can adjust this number as needed
-                for i in range(min(number_of_records_to_print, len(text_data))):
-                     print(f"Record {i + 1}: {text_data[i]}")
-                     print() 
+                #number_of_records_to_print = 5  # You can adjust this number as needed
+                #for i in range(min(number_of_records_to_print, len(text_data))):
+                   #  print(f"Record {i + 1}: {text_data[i]}")
+                    # print() 
 
                 # Process each line in the file
                 file_loaded = True
@@ -64,22 +64,28 @@ def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_ar
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Transfering data to the tree")
         for child in tree.get_children():
-            print("Processing tree child")  
+            #print("Processing tree child")  
             tree_item = tree.item(child)
             tree_address = tree_item['values'][find_tree_column_index(tree, 'Identifier')]
-            print("Tree Address:", tree_address)  # Debug print
-
+           # print("Tree Address:", tree_address)  # Debug print
+           
             for record in text_data:
-                  print("Record Address:", record['address'])  # Debug print
+                #  print("Record Address:", record['address'])  # Debug print
                   if record['address'] == tree_address:
                         # Update necessary cells in the tree with data from record
                     update_tree_item(tree, child, record)
+                    highlight_records(tree, child,highlighted_records)
+
+                   
     except Exception as e:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
-                          # Highlight if in bad_records or highlighted_records
-               # if record['Identifier'] in bad_records or record['Identifier'] in highlighted_records:
-                  #  highlight_tree_item(tree, child)
+             
+def highlight_records(tree, item,highlighted_records):
+    current_values = list(tree.item(item, 'values'))
+    if current_values[0] in highlighted_records:
+        tree.item(item, tags=('zero_postal_code',))
+        tree.tag_configure('zero_postal_code', background='#D19191', foreground='white')
 
 def update_tree_item(tree, item, record):
     current_values = list(tree.item(item, 'values'))
@@ -88,6 +94,8 @@ def update_tree_item(tree, item, record):
         if tree_column in tree['columns']:
             column_index = tree['columns'].index(tree_column)
             current_values[column_index] = record.get(record_field, '')
+        
+
 
     tree.item(item, values=current_values)
     
@@ -175,36 +183,7 @@ def proccess_street_name(record,bad_records,text_area):
     if match:
         record['po_box'] = match.group(1)  # Extract the number
     return record   
-    '''
-  
-def process_txt_file(tree, text_area):
-    try:
-        postal_code_col_index = find_column_index(tree, "postal_code")
-        if postal_code_col_index != -1:
-            process_postal_codes(tree, postal_code_col_index)
-        else:
-             raise ValueError("Postal code column not found")
-            
 
-        private_col_index = find_column_index(tree, "private")
-        family_col_index = find_column_index(tree, "family")
-        if private_col_index and family_col_index != -1:
-            update_with_combined_values(tree, private_col_index, family_col_index)
-        else:
-             raise ValueError("Private or Family column not found")
-           
-        street_name_col_index = find_column_index(tree, "street_name")
-        if street_name_col_index != -1:
-            update_address_po_box(tree, street_name_col_index, "address_po_box")
-        else:
-             raise ValueError("StreetName column not found")
-       
-
-    except Exception as e:
-        text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, f"Error during post-processing: {e}")
-    return
-'''
 def find_tree_column_index(tree, column_name):
     columns = tree["columns"]
     if column_name in columns:
@@ -238,7 +217,7 @@ def load_excel_orgin_file(tree, text_area):
 
         file_loaded = True
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, "Found and read the file. Next step is post processing")
+        text_area.insert(tk.END, "Found and read the file. Next step is to load the .txt file")
         
 
    except Exception as e:
