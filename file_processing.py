@@ -25,17 +25,16 @@ def display_file_contents(file_path, tree, text_area):
                     # print() 
 
                 # Process each line in the file
-                file_loaded = True
+                
                 text_area.delete('1.0', tk.END)
                 text_area.insert(tk.END, "Found and read the Text file.")
 
 
                 bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area)
                 transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area)
-
+                file_loaded = True          
                 text_area.delete('1.0', tk.END)
-                text_area.insert(tk.END, "finished transfering data to the tree")
-                #transfer data 
+                text_area.insert(tk.END, "File loaded successfully. (:")
                 #
                 break  # Exit the loop if file is successfully processed
         except UnicodeDecodeError:
@@ -59,7 +58,7 @@ def display_file_contents(file_path, tree, text_area):
         return
     
 def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area):
-    print("Number of rows in the tree:", len(tree.get_children()))
+   # print("Number of rows in the tree:", len(tree.get_children()))
     try:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Transfering data to the tree")
@@ -89,13 +88,21 @@ def highlight_records(tree, item,highlighted_records):
         tree.tag_configure('zero_postal_code', background='#D19191', foreground='white')
 
 def update_tree_item(tree, item, record):
+    
     current_values = list(tree.item(item, 'values'))
-
+    #print("Length of current_values:", len(current_values))
+    temp_column_index = tree['columns'].index("Ownership Date")
+   # print(temp_column_index)
     for tree_column, record_field in util.column_to_field_mapping.items():
         if tree_column in tree['columns']:
+         #   print("tree_column:",tree_column)
+           # print("record_field:",record_field)
+            
             column_index = tree['columns'].index(tree_column)
             current_values[column_index] = record.get(record_field, '')
-        
+            
+          #  print("Column Index:", column_index)
+   
 
 
     tree.item(item, values=current_values)
@@ -212,14 +219,19 @@ def load_excel_orgin_file(tree, text_area):
         # Remove the '_x0000_' string from the column names
         #maybe more robust check in the future
         df.replace(to_replace='_x0000_', value='', regex=True, inplace=True)
-      
+        num_tree_columns = len(tree['columns'])
         # Clear the Treeview
         tree.delete(*tree.get_children())
 
-        # Process each row in the DataFrame
+         # Process each row in the DataFrame
         for index, row in df.iterrows():
-            # Insert the row into the Treeview           
-             tree.insert("", tk.END, values=row.tolist())
+            row_values = row.tolist()
+
+            # Adjust the row length to match the treeview columns
+            adjusted_row_values = row_values + [''] * (num_tree_columns - len(row_values))
+
+            # Insert the adjusted row into the Treeview
+            tree.insert("", tk.END, values=adjusted_row_values)
 
         file_loaded = True
         text_area.delete('1.0', tk.END)
@@ -299,7 +311,7 @@ def update_address_po_box(tree, street_name_col, address_po_box_col):
 def setup_treeview(frame):
     tree = ttk.Treeview(frame)
 
-    # Define the columns based on the extraction_specs
+    # Define the columns based on the column_names
     column_ids = util.column_names
     tree['columns'] = column_ids
 
@@ -318,7 +330,9 @@ def setup_treeview(frame):
     tree.column(combined_col_name, anchor=tk.W, width=100, stretch=False)
     tree.heading(address_po_box_col, text="Address PO Box")
     tree.column(address_po_box_col, anchor=tk.W, width=100, stretch=False)
-
+    #debug
+   # number_of_columns = len(tree['columns'])
+   # print("Number of columns in the treeview:", number_of_columns)
     return tree
 
 

@@ -1,5 +1,6 @@
 import re
 
+
 def extract_mid(text, start_position, length):
     adjusted_start = start_position - 1
     return text[adjusted_start:adjusted_start + length]
@@ -17,6 +18,7 @@ column_to_field_mapping = {
     "Driver's Address-House Number": "house_number",
     "Driver's Address-PO Box": "po_box",
     "Driver's Address-Zip Code": "postal_code",
+    "Ownership Date": "ownership_date"
     # Add more mappings as needed...
 }
 column_names = [
@@ -50,7 +52,8 @@ column_names = [
     "Name of Violation Image File",
     "Name of Barcode Image File",
     "Type of Letter",
-    "Reported Location-Kilometer"
+    "Reported Location-Kilometer",
+    "Ownership Date",
 ]
 
 

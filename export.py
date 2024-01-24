@@ -1,6 +1,16 @@
 import tkinter as tk    
 import pandas as pd
+import datetime
 from tkinter import filedialog, messagebox, Toplevel, Checkbutton, Button
+
+
+def parse_date(date_str):
+    if '.' in date_str:
+        # Format: dd.mm.year
+        return datetime.datetime.strptime(date_str, '%d.%m.%Y')
+    else:
+        # Format: ddmmyear
+        return datetime.datetime.strptime(date_str, '%d%m%Y')
 
 def save_to_excel(tree, filename, textbox):
     try:
