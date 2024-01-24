@@ -202,17 +202,15 @@ def load_excel_orgin_file(tree, text_area):
         # Read the Excel file
         file_path = filedialog.askopenfilename()
         df = pd.read_excel(file_path)
-
+        df.fillna('', inplace=True)
+        df.replace(to_replace='_x0000_', value='', regex=True, inplace=True)
+        print(df.head()) 
         # Clear the Treeview
         tree.delete(*tree.get_children())
 
         # Process each row in the DataFrame
         for index, row in df.iterrows():
-            # Parse and reverse Hebrew words, then insert into the tree
-            # Assuming 'parse_line' and 'util.reverse_word_if_hebrew' can handle individual cell values
-            #reversed_row = [util.reverse_word_if_hebrew(word) if isinstance(word, str) else word for word in row]
-           #tree.insert("", tk.END, values=reversed_row)
-            
+            # Insert the row into the Treeview           
              tree.insert("", tk.END, values=row.tolist())
 
         file_loaded = True
