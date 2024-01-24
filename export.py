@@ -16,10 +16,15 @@ def open_export_dialog(tree):
     export_window.title("Export to Excel - Choose Cols to Export")
     check_boxes = {}
 
-    for col in tree['columns']:
+    checkboxes_frame = tk.Frame(export_window)
+    checkboxes_frame.pack(fill='both', expand=True)
+
+    num_cols = 2
+    for idx, col in enumerate(tree['columns']):
         var = tk.BooleanVar()
         check_boxes[col] = var
-        Checkbutton(export_window, text=col, variable=var).pack()
+        chk = Checkbutton(checkboxes_frame, text=col, variable=var)
+        chk.grid(row=idx % (len(tree['columns']) // num_cols), column=idx // (len(tree['columns']) // num_cols), sticky='w')
 
     def export_data():
         selected_columns = [col for col, var in check_boxes.items() if var.get()]
