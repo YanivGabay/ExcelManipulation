@@ -67,14 +67,15 @@ def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_ar
             #print("Processing tree child")  
             tree_item = tree.item(child)
             tree_address = tree_item['values'][find_tree_column_index(tree, 'Identifier')]
-           # print("Tree Address:", tree_address)  # Debug print
-           
+            #print("Tree Address:", tree_address)  # Debug print
+            tree_adress_str = str(tree_address).strip()
             for record in text_data:
-                #  print("Record Address:", record['address'])  # Debug print
-                  if record['address'] == tree_address:
+                 #print("Record Address:", record['costumer_code'])  # Debug print
+                  if record['costumer_code'] == tree_adress_str:
+                     #print("Found matching record"+record['costumer_code']+tree_adress_str)
                         # Update necessary cells in the tree with data from record
-                    update_tree_item(tree, child, record)
-                    highlight_records(tree, child,highlighted_records)
+                     update_tree_item(tree, child, record)
+                     highlight_records(tree, child,highlighted_records)
 
                    
     except Exception as e:
@@ -136,11 +137,12 @@ def process_txt_file(text_data, text_area):
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Cleaning the data")
         for record in text_data:
+             #print("Processing record")
              if isinstance(record, dict):  # Ensure record is a dictionary
                   record = proccess_record(record, text_area, bad_records, highlighted_records)
              else:
                   text_area.insert(tk.END, "Error: Record is not a dictionary.\n")
-             break  # Skip this record and continue with the next
+                  bad_records.append(record)
 
     except Exception as e:
         text_area.delete('1.0', tk.END)
@@ -151,6 +153,7 @@ def proccess_postal_codes(record,highlighted_records,text_area):
 
        
         postal_code = record["postal_code"]
+        #print("before if statem postal_code:",postal_code)
         if postal_code == '0000000':
             record["postal_code"] = 'zeros'
             highlighted_records.append(record["address"])
@@ -159,9 +162,10 @@ def proccess_postal_codes(record,highlighted_records,text_area):
         else:
             # Process non-zero postal codes
             # Assuming 7-digit postal code
+            #print("old postal_code:",postal_code)
             postal_code = postal_code[2:] + postal_code[:2]
             record["postal_code"] = postal_code
-    
+           # print("new postal_code:",postal_code)
         return record      
   
 def proccess_full_name(record,bad_records,text_area): 
@@ -202,9 +206,13 @@ def load_excel_orgin_file(tree, text_area):
         # Read the Excel file
         file_path = filedialog.askopenfilename()
         df = pd.read_excel(file_path)
+
+        #clean nan values
         df.fillna('', inplace=True)
+        # Remove the '_x0000_' string from the column names
+        #maybe more robust check in the future
         df.replace(to_replace='_x0000_', value='', regex=True, inplace=True)
-        print(df.head()) 
+      
         # Clear the Treeview
         tree.delete(*tree.get_children())
 

@@ -10,7 +10,7 @@ def is_hebrew(s):
 def reverse_word_if_hebrew(word):
     return word[::-1] if is_hebrew(word) else word
 column_to_field_mapping = {
-    "Identifier": "address",
+    "Identifier": "costumer_code",
     "Driver's Name": "family",
     "Driver's Address-City": "city_name",
     "Driver's Address-Street": "street_name",
