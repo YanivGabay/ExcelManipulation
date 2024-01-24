@@ -30,8 +30,8 @@ def display_file_contents(file_path, tree, text_area):
                 text_area.insert(tk.END, "Found and read the Text file.")
 
 
-                bad_records,highlighted_records,text_data = process_txt_file(text_data, text_area)
-                transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area)
+                text_data = process_txt_file(text_data, text_area)
+                transfer_data_to_tree(tree,text_data,text_area)
                 file_loaded = True          
                 text_area.delete('1.0', tk.END)
                 text_area.insert(tk.END, "File loaded successfully. (:")
@@ -57,7 +57,7 @@ def display_file_contents(file_path, tree, text_area):
         text_area.insert(tk.END, "Error: Unable to read the file with the tried encodings. Latest warning: " + text)
         return
     
-def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_area):
+def transfer_data_to_tree(tree,text_data,text_area):
    # print("Number of rows in the tree:", len(tree.get_children()))
     try:
         text_area.delete('1.0', tk.END)
@@ -74,24 +74,43 @@ def transfer_data_to_tree(tree,text_data,bad_records,highlighted_records,text_ar
                      #print("Found matching record"+record['costumer_code']+tree_adress_str)
                         # Update necessary cells in the tree with data from record
                      update_tree_item(tree, child, record)
-                     highlight_records(tree, child,highlighted_records)
-
-                   
+                     
+                     
+        highlight_rows(tree)           
     except Exception as e:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
-             
-def highlight_records(tree, item,highlighted_records):
-    current_values = list(tree.item(item, 'values'))
-    if current_values[0] in highlighted_records:
-        tree.item(item, tags=('zero_postal_code',))
-        tree.tag_configure('zero_postal_code', background='#D19191', foreground='white')
+
+
+def new_owner(row_data):
+    ownership_date = row_data["Ownership Date"]
+    report_date = row_data["Reporting Date"]
+
+
+def bad_postal_code(zip_code):
+    return zip_code == 'zeros'
+
+def highlight_rows(tree):
+    for child in tree.get_children():
+        row_data = tree.item(child, 'values')
+
+        # Check your conditions here
+        # For example, highlight if a certain column meets a condition
+        if bad_postal_code(row_data["Driver's Address-Zip Code"]):
+           tree.item(child, tags=('highlight',))
+        if new_owner(row_data):
+           tree.item(child, tags=('bad',))
+    # Applying the highlight style to tagged items
+    tree.tag_configure('highlight', background='lightblue')
+    tree.tag_configure('bad', background='red')
+
+
 
 def update_tree_item(tree, item, record):
     
     current_values = list(tree.item(item, 'values'))
     #print("Length of current_values:", len(current_values))
-    temp_column_index = tree['columns'].index("Ownership Date")
+    
    # print(temp_column_index)
     for tree_column, record_field in util.column_to_field_mapping.items():
         if tree_column in tree['columns']:
@@ -119,16 +138,16 @@ def parse_text_file(file):
         #print(single_line_data) 
         text_data.append(single_line_data)
      return text_data               
-def proccess_record(record,text_area,bad_records,highlighted_records):
+def process_record(record,text_area):
 
    try:
-    record = proccess_postal_codes(record,highlighted_records,text_area)
+    record = process_postal_codes(record)
 
   
-    record = proccess_full_name(record,bad_records,text_area)
+    record = process_full_name(record)
 
   
-    record = proccess_street_name(record,bad_records,text_area)
+    record = process_street_name(record)
     #print(record)
     return record
    except Exception as e:
@@ -138,32 +157,31 @@ def proccess_record(record,text_area,bad_records,highlighted_records):
    
 
 def process_txt_file(text_data, text_area): 
-    bad_records = []
-    highlighted_records = []
+   
     try:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, "Cleaning the data")
         for record in text_data:
              #print("Processing record")
              if isinstance(record, dict):  # Ensure record is a dictionary
-                  record = proccess_record(record, text_area, bad_records, highlighted_records)
+                  record = process_record(record, text_area)
              else:
                   text_area.insert(tk.END, "Error: Record is not a dictionary.\n")
-                  bad_records.append(record)
+                 
 
     except Exception as e:
         text_area.delete('1.0', tk.END)
         text_area.insert(tk.END, f"Error process_txt_file: {e}")
 
-    return bad_records,highlighted_records,text_data 
-def proccess_postal_codes(record,highlighted_records,text_area):
+    return text_data 
+def process_postal_codes(record):
 
        
         postal_code = record["postal_code"]
         #print("before if statem postal_code:",postal_code)
         if postal_code == '0000000':
             record["postal_code"] = 'zeros'
-            highlighted_records.append(record["address"])
+            
             
             
         else:
@@ -175,7 +193,7 @@ def proccess_postal_codes(record,highlighted_records,text_area):
            # print("new postal_code:",postal_code)
         return record      
   
-def proccess_full_name(record,bad_records,text_area): 
+def process_full_name(record): 
     first_name = record.get('private', '').strip()
     last_name = record.get('family', '').strip()
     record['full_name'] = f"{first_name} {last_name}"
@@ -185,7 +203,7 @@ def proccess_full_name(record,bad_records,text_area):
     
 
    
-def proccess_street_name(record,bad_records,text_area):
+def process_street_name(record):
     
     street_name = record.get('street_name', '').strip()
     # Regex pattern to match 'תד', 'ת.ד', or 'ת"ד', followed by numbers
@@ -266,27 +284,6 @@ def parse_line(line):
 
     return extracted_values
 
-
-def process_postal_codes(tree, postal_code_col):
-    for item in tree.get_children():
-        # Get the current value of the postal code
-        postal_code = tree.item(item, 'values')[postal_code_col]
-
-        # Check for all-zero postal codes and mark them
-        if postal_code == '0000000':
-            #TO DO: replace the value in the tree with '';
-            tree.item(item, tags=('zero_postal_code',))
-            tree.tag_configure('zero_postal_code', background='#D19191', foreground='white')
-
-        else:
-            # Process non-zero postal codes
-            # Assuming 7-digit postal code
-            postal_code = postal_code[2:] + postal_code[:2]
-
-            # Update the postal code in the Treeview
-            current_values = list(tree.item(item, 'values'))
-            current_values[postal_code_col] = postal_code
-            tree.item(item, values=current_values)
 
 
 def update_address_po_box(tree, street_name_col, address_po_box_col):
