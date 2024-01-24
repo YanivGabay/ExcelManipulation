@@ -40,7 +40,7 @@ def open_export_dialog(tree):
             var.set(col in default_columns)
 
     Button(export_window, text="Export", command=export_data).pack()
-    Button(export_window, text="Default", command=set_default).pack()
+    Button(export_window, text="Default Selection - Recommended", command=set_default).pack()
     
 def save_treeview_as_excel(tree, filename,selected_columns=None):
     # Extracting the column names
