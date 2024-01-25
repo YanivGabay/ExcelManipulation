@@ -88,7 +88,7 @@ def transfer_data_to_tree(tree,text_data,text_area):
 
 
 def bad_postal_code(value):
-    return value == '4664000'
+    return value == 'zeros'
 
 def highlight_rows(tree):
     print("Highlighting rows")

@@ -50,9 +50,9 @@ column_names = [
     "Possible Accident 2",
     "Possible Accident 3",
     "Name of Violation Image File",
-    "Name of Barcode Image File",
+   # "Name of Barcode Image File",
     "Type of Letter",
-    "Reported Location-Kilometer",
+   # "Reported Location-Kilometer",
     "Ownership Date",
 ]
 
