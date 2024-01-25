@@ -1,71 +1,37 @@
-# To-Do List
+## To-Do List
 
-This is a list of tasks that need to be completed.
+### Task 1: Final Excel File Format
+- **Description:** Ensure the final output file has English labels for each column.
+- **Status:** Pending - Gal to send the final excel format.
+- **Due Date:** TBD
 
-## Tasks
+### Task 3: Renaming .jpeg Files
+- **Description:** Change the name of all .jpeg files to {address-from מכתבי יידוע לפתוח}+"moment".png. Ensure folder names match addresses for easy search. All files should be in the same folder as מכתבי יידוע לפיתוח. Address matching between files from Tahbora and מכתבי ידוע לפיתוח is crucial.
+- **Status:** Pending
+- **Due Date:** TBD
 
-### Task 1
+### Task 4: Final Output Checks Before Sending to Letter Company
+- **Description:** Perform cross-checks before the final output: Compare תאריך דיווח from מכתבי יידוע לפיתוח and the ownership date. If the ownership date is newer, exclude from the letter mailing list. Consider removing QR picture and license plate image to avoid issues.
+- **Status:** Pending
+- **Due Date:** TBD
 
-- **Description:** First Change/Addition to the final outputed file 
-- make sure it has labels in english for each col
-- **Status:** Gal should send the final excel format 
-- **Due Date:** 
-
-### Task 2
-
-- **Description:** Need to fill מכתבי יידוע לפיתוח  with the values from the excel file
-- מכתבי ייוע לפתיוח SHOULD BE THE MAIN "SCREEN"
-- **Status:** finished and working, add fields is mapping utilities
-- **Due Date:** 25/1
-
-### Task 3
-
-- **Description:** We need to change the name of all .jpeg -> {adress-from מכתבי יידוע- לפתוח}+"moment".png 
-- name of the folders is equal to adress so we can eaisly search them.
-- it will always be in the same folder as מכתבי יידוע-לפיתוח 
-- there always should be perfect matching, between adresses - in the from file tahbora and id (מכתבי ידוע לפיתוח)   
-- **Status:** 
-- **Due Date:** 
-
-### Task 4
-
-- **Description:** before the final Output to the letter company (create letter)
-- we need to cross check to basic checks:
-- from מכתבי יידוע לפיתוח - תאריך דיווח
-- and ownership date 
-- if ownership date is newer, than תאריך דיווח we DONT want to send him the letter. so cross check.
--  Maybe delete the QR PICTURE and lincese plate image, make sure nothing cause problems
--  
-- **Status:** 
-- **Due Date:** 
-
-### Task 5
-
-- **Description:**  In the מכתב יידוע לפיתוח
-- Colum N  מיקום דיווח כביש , remove only the word כביש from the cell -gal need to check on it
--  Delete Col AE(kilometer) AC (barcode) 
--  Col O (כמות עברות) fill 1 for all
--  תאריך אישור Col D = change all values for today date 00:00:0000
--  There should be at least 1 value in the one of the cols : L,M,N
--  if there isnt, we should export them, to a seprate file, and NOT export them 
--  with the good data.
--  if מיקום דיווח יישוב cells value are in english, in the final output file
--  mark those rows in red aswell, or make any sign
--  *its color on the excel output file, not on our GUI
--  We need to fill E-J on the מכתב יידוע לפיתוח from the first loaded excel
--  
-- Only one output file should be in the end, the letter neccesery cols excel file, 
-- with a specific name.
-- **Status:** 
-- **Due Date:** 
-## Completed Tasks
-
-### Task 1
-
+### Task 5: Data Adjustments in מכתב יידוע לפיתוח
 - **Description:** 
-- **Completion Date:** 
+   - Remove the word כביש from Colum N מיקום דיווח כביש.
+   - Delete columns AE (kilometer) and AC (barcode).
+   - Set Colum O (כמות עברות) to 1 for all entries.
+   - Change all values in Col D (תאריך אישור) to today's date.
+   - Ensure at least one value in columns L, M, or N; separate entries without values.
+   - Mark rows in red or sign if מיקום דיווח יישוב values are in English in the final output file.
+   - Populate columns E-J from the first loaded excel file.
+   - Output a single file in the end with a specific name.
+- **Status:** Pending
+- **Due Date:** TBD
 
-### Task 2
+### Completed Task 2: מכתבי יידוע לפיתוח Main Screen
+- **Description:** Set מכתבי ייוע לפתיוח as the main screen. Ensure fields are mapped correctly.
+- **Completion Date:** 25/1
+- **Status:** Finished and working
 
-- **Description:** 
-- **Completion Date:** 
+### Notes:
+
