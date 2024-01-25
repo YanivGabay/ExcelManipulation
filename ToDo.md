@@ -17,8 +17,7 @@
 
 ### Task 5: Data Adjustments in מכתב יידוע לפיתוח
 - **Description:** 
-   - Remove the word כביש from Colum N מיקום דיווח כביש.
-   - Delete columns AE (kilometer) and AC (barcode).
+  
 
    - Ensure at least one value in columns L, M, or N; separate entries without values.
    - Mark rows in red or sign if מיקום דיווח יישוב values are in English in the final output file.
@@ -36,5 +35,7 @@
 - **Description:** 
     - 1 in all number of offences
     - approval date is date of today
+    - Remove the word כביש from Colum N מיקום דיווח כביש.
+    - Delete columns AE (kilometer) and AC (barcode).
 ### Notes:
 

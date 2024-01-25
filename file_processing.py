@@ -114,9 +114,15 @@ def update_tree_item(tree, item, record):
    
     #print("Length of current_values:", len(current_values))
    
+    #update the approval date to current date
     current_date = datetime.now().strftime("%d-%m-%Y")
     current_values[find_tree_column_index(tree,"Approval Date")] = current_date
-    
+
+    #remove the word כביש from the reported road
+    reported_road = current_values[find_tree_column_index(tree,"Reported Location-Road")]
+    updated_reported_road = re.sub(r'כביש\s*', '', reported_road)
+    current_values[find_tree_column_index(tree,"Reported Location-Road")] = updated_reported_road
+    #all violations are 1
     current_values[find_tree_column_index(tree,"Number of Violations")] = '1'
    # print(temp_column_index)
     for tree_column, record_field in util.column_to_field_mapping.items():
