@@ -4,8 +4,7 @@ import gui_components as gui_comp
 import file_processing as file_proc
 import utilities as util
 import export as export_service
-#to ask gal:
-#about כתובת נהג תא דואר
+from tkinter import PhotoImage
 
 
 def main():
@@ -13,7 +12,11 @@ def main():
     root.title("Text File Viewer")
     root.geometry('800x600')
     root.maxsize(1200, 800)
-
+    if  root.tk.call('tk', 'windowingsystem')=='win32':
+        root.iconbitmap('Resources/small.ico')  # Use .ico file for Windows
+    else:
+        img = PhotoImage(file='Resources/third_icon.png')  # Use .png or .gif file for other OS
+        root.tk.call('wm', 'iconphoto', root._w, img)
     main_frame = ttk.Frame(root)
     main_frame.pack(fill='both', expand=True)
     
