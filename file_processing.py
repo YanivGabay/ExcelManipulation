@@ -33,8 +33,8 @@ def display_file_contents(file_path, tree, text_area):
                 text_data = process_txt_file(text_data, text_area)
                 transfer_data_to_tree(tree,text_data,text_area)
                 file_loaded = True          
-                text_area.delete('1.0', tk.END)
-                text_area.insert(tk.END, "File loaded successfully. (:")
+               # text_area.delete('1.0', tk.END)
+               # text_area.insert(tk.END, "File loaded successfully. (:")
                 #
                 break  # Exit the loop if file is successfully processed
         except UnicodeDecodeError:
@@ -111,8 +111,13 @@ def highlight_rows(tree):
 def update_tree_item(tree, item, record):
     
     current_values = list(tree.item(item, 'values'))
+   
     #print("Length of current_values:", len(current_values))
+   
+    current_date = datetime.now().strftime("%d-%m-%Y")
+    current_values[find_tree_column_index(tree,"Approval Date")] = current_date
     
+    current_values[find_tree_column_index(tree,"Number of Violations")] = '1'
    # print(temp_column_index)
     for tree_column, record_field in util.column_to_field_mapping.items():
         if tree_column in tree['columns']:
@@ -123,7 +128,9 @@ def update_tree_item(tree, item, record):
             current_values[column_index] = record.get(record_field, '')
             
           #  print("Column Index:", column_index)
-   
+   # current_values[find_tree_column_index['Number of Violations']] = #'1'
+    #
+   # current_values[find_tree_column_index['Approval Date']] = #current_date
 
 
     tree.item(item, values=current_values)
