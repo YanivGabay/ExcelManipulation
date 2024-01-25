@@ -82,26 +82,25 @@ def transfer_data_to_tree(tree,text_data,text_area):
         text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
 
 
-def new_owner(row_data):
-    ownership_date = row_data["Ownership Date"]
-    report_date = row_data["Reporting Date"]
+#def new_owner(row_data):
+    #ownership_date = row_data["Ownership Date"]
+    #report_date = row_data["Reporting Date"]
 
 
-def bad_postal_code(row_data):
-    return row_data["Driver's Address-Zip Code"].str().strip() == '4664000'
+def bad_postal_code(value):
+    return value == '4664000'
 
 def highlight_rows(tree):
     print("Highlighting rows")
+   
     for child in tree.get_children():
         row_data = tree.item(child, 'values')
-        print(row_data)
-       # print(row_data["Driver's Address-Zip Code"])
-        # Check your conditions here
-        # For example, highlight if a certain column meets a condition
        
-       # if bad_postal_code(row_data):
-        #   tree.item(child, tags=('highlight',))
-       # if new_owner(row_data):
+       
+        if bad_postal_code(row_data[find_tree_column_index(tree, "Driver's Address-Zip Code")]):
+           print("Found bad postal code")
+           tree.item(child, tags=('highlight',))
+       # if new_owner(row_data,tree):
          #  tree.item(child, tags=('bad',))
     # Applying the highlight style to tagged items
     tree.tag_configure('highlight', background='lightblue')
@@ -311,7 +310,7 @@ def update_address_po_box(tree, street_name_col, address_po_box_col):
 
 def setup_treeview(frame):
 
-    
+
     tree = ttk.Treeview(frame)
 
     # Define the columns based on the column_names
