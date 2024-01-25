@@ -87,19 +87,22 @@ def new_owner(row_data):
     report_date = row_data["Reporting Date"]
 
 
-def bad_postal_code(zip_code):
-    return zip_code == 'zeros'
+def bad_postal_code(row_data):
+    return row_data["Driver's Address-Zip Code"].str().strip() == '4664000'
 
 def highlight_rows(tree):
+    print("Highlighting rows")
     for child in tree.get_children():
         row_data = tree.item(child, 'values')
-
+        print(row_data)
+       # print(row_data["Driver's Address-Zip Code"])
         # Check your conditions here
         # For example, highlight if a certain column meets a condition
-        if bad_postal_code(row_data["Driver's Address-Zip Code"]):
-           tree.item(child, tags=('highlight',))
-        if new_owner(row_data):
-           tree.item(child, tags=('bad',))
+       
+       # if bad_postal_code(row_data):
+        #   tree.item(child, tags=('highlight',))
+       # if new_owner(row_data):
+         #  tree.item(child, tags=('bad',))
     # Applying the highlight style to tagged items
     tree.tag_configure('highlight', background='lightblue')
     tree.tag_configure('bad', background='red')
@@ -230,10 +233,11 @@ def load_excel_orgin_file(tree, text_area):
    try:
         # Read the Excel file
         file_path = filedialog.askopenfilename()
-        df = pd.read_excel(file_path)
+        df = pd.read_excel(file_path,dtype=str)
 
-        #clean nan values
-        df.fillna('', inplace=True)
+        
+
+        df = df.replace(pd.NA, '')
         # Remove the '_x0000_' string from the column names
         #maybe more robust check in the future
         df.replace(to_replace='_x0000_', value='', regex=True, inplace=True)
@@ -306,6 +310,8 @@ def update_address_po_box(tree, street_name_col, address_po_box_col):
 
 
 def setup_treeview(frame):
+
+    
     tree = ttk.Treeview(frame)
 
     # Define the columns based on the column_names
