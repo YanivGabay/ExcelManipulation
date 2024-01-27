@@ -5,7 +5,7 @@ import file_processing as file_proc
 import utilities as util
 import export as export_service
 from tkinter import PhotoImage
-
+import options_menu as options_menu
 
 def main():
     root = tk.Tk()
@@ -17,6 +17,12 @@ def main():
     else:
         img = PhotoImage(file='Resources/third_icon.png')  # Use .png or .gif file for other OS
         root.tk.call('wm', 'iconphoto', root._w, img)
+    menu = tk.Menu(root)
+    
+    options_menu.create_options_menu(menu, root)
+
+    root.config(menu=menu)
+    
     main_frame = ttk.Frame(root)
     main_frame.pack(fill='both', expand=True)
     
@@ -27,7 +33,7 @@ def main():
     
     # Now create top frame with lambda functions for load_file and load_file_auto
     top_frame, text_area = gui_comp.create_top_frame(main_frame, lambda: file_proc.load_file(tree,text_area),
-                                                      lambda: file_proc.load_excel_orgin_file(tree,text_area),
+                                                   lambda: file_proc.load_excel_orgin_file(tree,text_area),
                                                       lambda: export_service.save_to_excel(tree, "ExportData.xlsx",text_area))
     top_frame.pack(side='top', fill='x')
 
