@@ -19,6 +19,7 @@ column_to_field_mapping = {
     "Driver's Address-PO Box": "po_box",
     "Driver's Address-Zip Code": "postal_code",
     "Ownership Date": "ownership_date"
+   
     # Add more mappings as needed...
 }
 column_names = [

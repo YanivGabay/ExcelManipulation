@@ -82,9 +82,22 @@ def transfer_data_to_tree(tree,text_data,text_area):
         text_area.insert(tk.END, f"Error inside transfer_data_to_tree(): {e}")
 
 
-#def new_owner(row_data):
-    #ownership_date = row_data["Ownership Date"]
-    #report_date = row_data["Reporting Date"]
+def new_owner(row_data,tree):
+    ownership_date = row_data[find_tree_column_index(tree, "Ownership Date")]
+    report_date = row_data[find_tree_column_index(tree, "Reporting Date")]
+    print("Ownership Date:",ownership_date)
+    print("Report Date:",report_date)
+
+    # Convert "Report Date" to datetime object
+    report_date_clean = datetime.strptime(report_date, "%d.%m.%Y")
+
+    # Convert "Ownership Date" to datetime object
+    # Assuming the year is in the 2000s
+    ownership_date_clean = datetime.strptime(ownership_date, "%d%m%y")
+
+    if ownership_date_clean > report_date_clean:
+        return True
+    return False
 
 
 def bad_postal_code(value):
@@ -100,8 +113,8 @@ def highlight_rows(tree):
         if bad_postal_code(row_data[find_tree_column_index(tree, "Driver's Address-Zip Code")]):
            print("Found bad postal code")
            tree.item(child, tags=('highlight',))
-       # if new_owner(row_data,tree):
-         #  tree.item(child, tags=('bad',))
+        if new_owner(row_data,tree):
+           tree.item(child, tags=('bad',))
     # Applying the highlight style to tagged items
     tree.tag_configure('highlight', background='lightblue')
     tree.tag_configure('bad', background='red')
@@ -252,8 +265,13 @@ def load_excel_orgin_file(tree, text_area):
         df = df.replace(pd.NA, '')
         # Remove the '_x0000_' string from the column names
         #maybe more robust check in the future
+       
         df.replace(to_replace='_x0000_', value='', regex=True, inplace=True)
         num_tree_columns = len(tree['columns'])
+
+        columns_to_drop = ['שם קובץ תמונת ברקוד', 'מיקום דיווח קילומטר', ]  # Replace with actual column names
+        df.drop(columns=columns_to_drop, inplace=True)
+
         # Clear the Treeview
         tree.delete(*tree.get_children())
 

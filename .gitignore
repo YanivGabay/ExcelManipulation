@@ -9,4 +9,5 @@ output.csv
 tempCodeRunnerFile.py
 /build/
 /dist/
+/Doxygen/
 main.spec
