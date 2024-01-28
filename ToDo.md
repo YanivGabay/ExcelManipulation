@@ -19,7 +19,7 @@
    - Ensure at least one value in columns L, M, or N; separate entries without values.
    - Mark rows in red or sign if מיקום דיווח יישוב values are in English in the final output file.
    - Populate columns E-J from the first loaded excel file.
-   - Output a single file in the end with a specific name.
+   - Output a single file in the end with a specific name.? exaft name
 - **Status:** Pending
 - **Due Date:** TBD
 
@@ -36,7 +36,7 @@
     - Delete columns AE (kilometer) and AC (barcode).
 ### Task 4: Final Output Checks Before Sending to Letter Company
 - **Description:** Perform cross-checks before the final output: Compare תאריך דיווח from מכתבי יידוע לפיתוח and the ownership date. If the ownership date is newer, exclude from the letter mailing list. Consider removing QR picture and license plate image to avoid issues.
-- **Status:** finished,if item has bad tag it wont be exported
+- **Status:** finished,if item has bad tag it wont be exported,get bad tag if newowner
 - **Due Date:** TBD
 ### Notes:
 

@@ -67,14 +67,15 @@ def transfer_data_to_tree(tree,text_data,text_area):
             tree_item = tree.item(child)
             tree_address = tree_item['values'][find_tree_column_index(tree, 'Identifier')]
             #print("Tree Address:", tree_address)  # Debug print
-            tree_adress_str = str(tree_address).strip()
+            tree_address = str(tree_address).strip()
             for record in text_data:
                  #print("Record Address:", record['costumer_code'])  # Debug print
-                  if record['costumer_code'] == tree_adress_str:
+                  if record['costumer_code'] == tree_address:
                      #print("Found matching record"+record['costumer_code']+tree_adress_str)
                         # Update necessary cells in the tree with data from record
                      update_tree_item(tree, child, record)
-                     
+                  else: 
+                       tree.item(child, tags=('bad',))  
                      
         highlight_rows(tree)           
     except Exception as e:
@@ -83,7 +84,12 @@ def transfer_data_to_tree(tree,text_data,text_area):
 
 
 def new_owner(row_data,tree):
+
+   
+
     ownership_date = row_data[find_tree_column_index(tree, "Ownership Date")]
+    if ownership_date == '':
+        return False
     report_date = row_data[find_tree_column_index(tree, "Reporting Date")]
     print("Ownership Date:",ownership_date)
     print("Report Date:",report_date)
