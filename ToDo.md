@@ -7,7 +7,12 @@
 
 ### Task 3: Renaming .jpeg Files
 - **Description:** Change the name of all .jpeg files to {address-from מכתבי יידוע לפתוח}+"moment".png. Ensure folder names match addresses for easy search. All files should be in the same folder as מכתבי יידוע לפיתוח. Address matching between files from Tahbora and מכתבי ידוע לפיתוח is crucial.
-- **Status:** Pending
+- are folder names is after we seperate 1 from costumer?
+- **Status:** Almost finished
+- just need to make sure the name
+- but its working, currently
+- on the same folder as excel file 
+- after extracted
 - **Due Date:** TBD
 
 
@@ -15,6 +20,8 @@
 ### Task 5: Data Adjustments in מכתב יידוע לפיתוח
 - **Description:** 
   
+    -what is bad dont export
+    -what is export despite nothing etc
 
    - Ensure at least one value in columns L, M, or N; separate entries without values.
    - Mark rows in red or sign if מיקום דיווח יישוב values are in English in the final output file.

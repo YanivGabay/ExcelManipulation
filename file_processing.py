@@ -7,7 +7,7 @@ import re
 import tkinter as tk
 from tkinter import ttk
 import gui_components as gui_comp
-
+import files_cleaner as cleaner
 
 def display_file_contents(file_path, tree, text_area):
     file_loaded = False
@@ -266,6 +266,8 @@ def load_excel_orgin_file(tree, text_area):
         file_path = filedialog.askopenfilename()
         df = pd.read_excel(file_path,dtype=str)
 
+        for folder_name in df.iloc[:, 0]:
+            cleaner.cleanfiles(folder_name, file_path)
         
 
         df = df.replace(pd.NA, '')
