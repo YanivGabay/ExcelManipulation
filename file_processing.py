@@ -267,7 +267,7 @@ def load_excel_orgin_file(tree, text_area):
         df = pd.read_excel(file_path,dtype=str)
 
         for folder_name in df.iloc[:, 0]:
-            cleaner.cleanfiles(folder_name, file_path)
+            cleaner.cleanfiles(folder_name, file_path,True)
         
 
         df = df.replace(pd.NA, '')
@@ -301,7 +301,7 @@ def load_excel_orgin_file(tree, text_area):
    except Exception as e:
         # Handle exceptions
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, f"Error reading file: {e}")
+        text_area.insert(tk.END, f"Error def load_excel_orgin_file(tree, text_area): {e}")
 
    return file_loaded
 

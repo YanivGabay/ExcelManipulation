@@ -1,9 +1,23 @@
 import os
 from PIL import Image
+import zipfile
 
-def cleanfiles(folder_name,excel_file_path):
+def cleanfiles(folder_name,excel_file_path,zip_mode):
     directory = os.path.dirname(excel_file_path)
     folder_path = os.path.join(directory, folder_name)
+    #if zip mode
+    #we will decompress the files
+    #and clean
+    if(zip_mode):
+        new_path = f"{folder_path}.zip"
+        folder_path = directory 
+        #we extract all the files in
+        #the excel directory
+        if zipfile.is_zipfile(new_path):
+            with zipfile.ZipFile(new_path, 'r') as zip_ref:
+            # Extract all the contents into the directory
+             zip_ref.extractall(directory)
+        print(new_path)
     if os.path.isdir(folder_path):
         for file in os.listdir(folder_path):
             file_path = os.path.join(folder_path, file)
