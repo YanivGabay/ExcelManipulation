@@ -18,6 +18,10 @@ def cleanfiles(folder_name,excel_file_path,zip_mode):
             # Extract all the contents into the directory
              zip_ref.extractall(directory)
         print(new_path)
+    deleteFiles(folder_path)
+   
+def deleteFiles(folder_path):
+    
     if os.path.isdir(folder_path):
         for file in os.listdir(folder_path):
             file_path = os.path.join(folder_path, file)
