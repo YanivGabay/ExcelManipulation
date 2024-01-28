@@ -1,9 +1,8 @@
 ## To-Do List
 
-### Task 1: Final Excel File Format
-- **Description:** Ensure the final output file has English labels for each column.
-- **Status:** Pending - Gal to send the final excel format.
-- **Due Date:** TBD
+
+
+
 
 ### Task 3: Renaming .jpeg Files
 - **Description:** Change the name of all .jpeg files to {address-from מכתבי יידוע לפתוח}+"moment".png. Ensure folder names match addresses for easy search. All files should be in the same folder as מכתבי יידוע לפיתוח. Address matching between files from Tahbora and מכתבי ידוע לפיתוח is crucial.
@@ -24,11 +23,38 @@
     -what is export despite nothing etc
 
    - Ensure at least one value in columns L, M, or N; separate entries without values.
-   - Mark rows in red or sign if מיקום דיווח יישוב values are in English in the final output file.
+   - Mark rows in light blue (still export but highlight) or sign if מיקום דיווח יישוב values are in English in the final output file.
    - Populate columns E-J from the first loaded excel file.
-   - Output a single file in the end with a specific name.? exaft name
+   
 - **Status:** Pending
 - **Due Date:** TBD
+
+### Task6: Final Formatting and names:
+- **Descripition:**
+- we need to change the names of the קובץ ידוע פיתוח 
+- colms.
+- and than also decide which cols to input in the final file
+- the first 3 cells in response
+- from  תחבורה is the costumer_Id
+- who calls the request, the 4 cell is the response type 1 for good
+-
+-need to change the file name col
+- to each record file name of image left
+-
+-remove empty first col in tree view
+
+- BIG FIX: ID col should be equal to address value from TAHBURA!!!!!!!!
+
+- remove combined_family or FullName
+- col its useless
+-
+  - update: output file with fullname is tottaly valid can change the last name
+- names of files:
+- output excel file name: '"to_dfus_" + {date.today}' 
+- image that left from extracting zip file
+- her file name should be: 'Id_moment'
+
+
 
 ### Completed Task 2: מכתבי יידוע לפיתוח Main Screen
 - **Description:** Set מכתבי ייוע לפתיוח as the main screen. Ensure fields are mapped correctly.

@@ -10,29 +10,33 @@ def is_hebrew(s):
 
 def reverse_word_if_hebrew(word):
     return word[::-1] if is_hebrew(word) else word
+
+
+
+
 column_to_field_mapping = {
-    "Identifier": "costumer_code",
-    "Driver's Name": "full_name",
-    "Driver's Address-City": "city_name",
-    "Driver's Address-Street": "street_name",
-    "Driver's Address-House Number": "house_number",
-    "Driver's Address-PO Box": "po_box",
-    "Driver's Address-Zip Code": "postal_code",
+    "Id": "address",
+    "Driver Name": "full_name",
+    "Driver Address-City": "city_name",
+    "Driver Address-Street": "street_name",
+    "Driver Address-House Number": "house_number",
+    "Driver Address-PO Box": "po_box",
+    "Driver Address-Zip Code": "postal_code",
     "Ownership Date": "ownership_date"
    
     # Add more mappings as needed...
 }
 column_names = [
-    "Identifier",
-    "Reporting Date",
-    "Reporting Time",
+    "Id",
+    "Reporting Date",# Reported Date
+    "Reporting Time", # Reported Time
     "Approval Date",
-    "Driver's Name",
-    "Driver's Address-City",
-    "Driver's Address-Street",
-    "Driver's Address-House Number",
-    "Driver's Address-PO Box",
-    "Driver's Address-Zip Code",
+    "Driver Name",
+    "Driver Address-City",
+    "Driver Address-Street",
+    "Driver Address-House Number",
+    "Driver Address-PO Box",
+    "Driver Address-Zip Code",
     "License Number",
     "Reported Location-Town",
     "Reported Location-Street",

@@ -2,7 +2,7 @@ import tkinter as tk
 import pandas as pd
 import datetime
 from tkinter import filedialog, messagebox, Toplevel, Checkbutton, Button
-
+import utilities as util
 
 def parse_date(date_str):
     if '.' in date_str:
@@ -45,7 +45,7 @@ def open_export_dialog(tree):
 
     def set_default():
         # Define your default columns here
-        default_columns = ['Identifier', 'column2', 'column3']  # Replace with actual column names
+        default_columns = util.column_names  # Replace with actual column names
         for col, var in check_boxes.items():
             var.set(col in default_columns)
 

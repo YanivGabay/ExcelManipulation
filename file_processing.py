@@ -32,7 +32,9 @@ def display_file_contents(file_path, tree, text_area):
 
                 text_data = process_txt_file(text_data, text_area)
                 transfer_data_to_tree(tree,text_data,text_area)
-                file_loaded = True          
+                
+                file_loaded = True  
+                print("Finished transfer_data_to_tree")        
                # text_area.delete('1.0', tk.END)
                # text_area.insert(tk.END, "File loaded successfully. (:")
                 #
@@ -65,17 +67,20 @@ def transfer_data_to_tree(tree,text_data,text_area):
         for child in tree.get_children():
             #print("Processing tree child")  
             tree_item = tree.item(child)
-            tree_address = tree_item['values'][find_tree_column_index(tree, 'Identifier')]
-            #print("Tree Address:", tree_address)  # Debug print
+            tree_address = tree_item['values'][find_tree_column_index(tree, util.column_names[0])]
+            #print("Tree Address:", tree_address)  # Debug print    
             tree_address = str(tree_address).strip()
             for record in text_data:
-                 #print("Record Address:", record['costumer_code'])  # Debug print
-                  if record['costumer_code'] == tree_address:
-                     #print("Found matching record"+record['costumer_code']+tree_adress_str)
+                  #print("Record Address:", record['address'])  # Debug print
+                  if record['address'] == tree_address:
+                    # print("Found matching record"+record['address']+tree_address)
                         # Update necessary cells in the tree with data from record
                      update_tree_item(tree, child, record)
+                    
                   else: 
                        tree.item(child, tags=('bad',))  
+                       print("Found unmatching value address code" + "Record Address:", record['address'])
+                       
                      
         highlight_rows(tree)           
     except Exception as e:
@@ -116,15 +121,16 @@ def highlight_rows(tree):
         row_data = tree.item(child, 'values')
        
        
-        if bad_postal_code(row_data[find_tree_column_index(tree, "Driver's Address-Zip Code")]):
+        if bad_postal_code(row_data[find_tree_column_index(tree, "Driver Address-Zip Code")]):
            print("Found bad postal code")
            tree.item(child, tags=('highlight',))
         if new_owner(row_data,tree):
+           print("Found new owner code")
            tree.item(child, tags=('bad',))
     # Applying the highlight style to tagged items
     tree.tag_configure('highlight', background='lightblue')
     tree.tag_configure('bad', background='red')
-
+    print("finished highlight_rows()")
 
 
 def update_tree_item(tree, item, record):
@@ -146,8 +152,8 @@ def update_tree_item(tree, item, record):
    # print(temp_column_index)
     for tree_column, record_field in util.column_to_field_mapping.items():
         if tree_column in tree['columns']:
-         #   print("tree_column:",tree_column)
-           # print("record_field:",record_field)
+            print("tree_column:",tree_column)
+            print("record_field:",record_field)
             
             column_index = tree['columns'].index(tree_column)
             current_values[column_index] = record.get(record_field, '')
