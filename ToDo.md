@@ -10,10 +10,7 @@
 - **Status:** Pending
 - **Due Date:** TBD
 
-### Task 4: Final Output Checks Before Sending to Letter Company
-- **Description:** Perform cross-checks before the final output: Compare תאריך דיווח from מכתבי יידוע לפיתוח and the ownership date. If the ownership date is newer, exclude from the letter mailing list. Consider removing QR picture and license plate image to avoid issues.
-- **Status:** Pending
-- **Due Date:** TBD
+
 
 ### Task 5: Data Adjustments in מכתב יידוע לפיתוח
 - **Description:** 
@@ -37,5 +34,9 @@
     - approval date is date of today
     - Remove the word כביש from Colum N מיקום דיווח כביש.
     - Delete columns AE (kilometer) and AC (barcode).
+### Task 4: Final Output Checks Before Sending to Letter Company
+- **Description:** Perform cross-checks before the final output: Compare תאריך דיווח from מכתבי יידוע לפיתוח and the ownership date. If the ownership date is newer, exclude from the letter mailing list. Consider removing QR picture and license plate image to avoid issues.
+- **Status:** finished,if item has bad tag it wont be exported
+- **Due Date:** TBD
 ### Notes:
 

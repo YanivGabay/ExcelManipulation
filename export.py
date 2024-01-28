@@ -59,11 +59,16 @@ def save_treeview_as_excel(tree, filename,selected_columns=None):
 
     # Creating a list of dictionaries from the Treeview items
     data = []
+  
     for item in tree.get_children():
+        tags = tree.item(item, "tags")
+        if 'bad' in tags:
+            continue  # Skip this item because it's tagged as 'bad'
         row_data = tree.item(item, 'values')
         # Only include data for selected columns
         row_dict = {col: row_data[idx] for idx, col in enumerate(tree['columns']) if col in selected_columns}
         data.append(row_dict)
+
 
     # Creating a DataFrame with selected columns and saving it as an Excel file
     df = pd.DataFrame(data, columns=selected_columns)
