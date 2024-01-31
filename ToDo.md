@@ -1,7 +1,10 @@
 ## To-Do List
 
-
-
+### Task 6: Renaming .jpeg Files
+- Big bug with new files
+- original formula said address is only 6 digits.
+- but in new files its 7 digits, should we push everything 1 forward?
+- original formulas gave say 6, need to confirm with gal
 
 
 ### Task 3: Renaming .jpeg Files

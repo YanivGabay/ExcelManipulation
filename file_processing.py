@@ -72,14 +72,14 @@ def transfer_data_to_tree(tree,text_data,text_area):
             tree_address = str(tree_address).strip()
             for record in text_data:
                   #print("Record Address:", record['address'])  # Debug print
-                  if record['address'] == tree_address:
+                  if record['address'].strip() == tree_address:
                     # print("Found matching record"+record['address']+tree_address)
                         # Update necessary cells in the tree with data from record
                      update_tree_item(tree, child, record)
                     
                   else: 
                        tree.item(child, tags=('bad',))  
-                       print("Found unmatching value address code" + "Record Address:", record['address'])
+                       print("Found unmatching value address code tree value:" + tree_address + " Record Address:", record['address'])
                        
                      
         highlight_rows(tree)           
@@ -173,7 +173,7 @@ def parse_text_file(file):
         parsed_line = parse_line(line)
         reversed_line = [util.reverse_word_if_hebrew(word) for word in parsed_line]
         column_names = [spec[0] for spec in util.extraction_specs]
-        #print(reversed_line)
+        print(reversed_line)
         single_line_data = dict(zip(column_names, reversed_line))
         #print(single_line_data) 
         text_data.append(single_line_data)
