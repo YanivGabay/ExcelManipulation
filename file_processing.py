@@ -358,6 +358,8 @@ def setup_treeview(frame):
 
     tree = ttk.Treeview(frame)
 
+    tree['show'] = 'headings' # Hide the empty column at the start of the Treeview
+    
     # Define the columns based on the column_names
     column_ids = util.column_names
     tree['columns'] = column_ids
