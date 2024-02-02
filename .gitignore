@@ -4,6 +4,9 @@
 *.txt
 *.jpg
 *.zip
+*.png
+*.jpg
+*.jpeg
 __pycache__/
 output.csv
 tempCodeRunnerFile.py
