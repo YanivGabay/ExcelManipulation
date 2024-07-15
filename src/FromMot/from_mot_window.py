@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk, scrolledtext
 from src.FromMot.text_processing import parse_text_file
-
+from src.FromMot.clean_records import process_record
 from constants import EXTRACTION_FORMULA
 
 def open_from_mot_window(root):
@@ -9,7 +9,7 @@ def open_from_mot_window(root):
     from_mot_window = tk.Toplevel(root)
     from_mot_window.title("FROM MOT Processing")
     from_mot_window.geometry("600x400")
-
+    from_mot_window.grab_set()  # This line makes the window modal
     # Layout using grid
     from_mot_window.grid_columnconfigure(0, weight=1)
     from_mot_window.grid_columnconfigure(1, weight=3)
@@ -35,6 +35,14 @@ def open_from_mot_window(root):
                 
                     text_data = parse_text_file(file)
                     output_text.insert(tk.END,f"finished loading the text file from ministry")
+
+                    for record in text_data:
+                    #print("Processing record")
+                        if isinstance(record, dict):  # Ensure record is a dictionary
+                            record = process_record(record, output_text)
+                            print(f"record after beign clean:\n {record}")
+                        else:
+                            output_text.insert(tk.END, "Error: Record is not a dictionary.\n") 
             except UnicodeDecodeError:
                 # This exception will trigger if the encoding is incorrect
                 continue  # Try the next encoding

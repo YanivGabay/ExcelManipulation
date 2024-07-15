@@ -7,10 +7,10 @@ def parse_text_file(file):
     text_data = []
     for line in file:
         parsed_line = parse_line(line)  # Assume parse_line is defined elsewhere
-        print(f"line before reversing {parsed_line}")
-        reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  # Assume this function is defined
+        #print(f"line before reversing {parsed_line}")
+       # reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  # Assume this function is defined
         column_names = [spec[0] for spec in EXTRACTION_FORMULA]
-        single_line_data = dict(zip(column_names, reversed_line))
+        single_line_data = dict(zip(column_names, parsed_line))
         print(single_line_data)
         text_data.append(single_line_data)
     return text_data
