@@ -1,0 +1,45 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk, scrolledtext
+
+def open_from_mot_window(root):
+    # Create a new top-level window
+    from_mot_window = tk.Toplevel(root)
+    from_mot_window.title("FROM MOT Processing")
+    from_mot_window.geometry("600x400")
+
+    # Layout using grid
+    from_mot_window.grid_columnconfigure(0, weight=1)
+    from_mot_window.grid_columnconfigure(1, weight=3)
+
+    # Buttons for file uploads
+    ttk.Button(from_mot_window, text="Upload Text File/להעלות את קובץ הטקסט ממשרד התחבורה", command=lambda: upload_text_file()).grid(row=0, column=0, padx=10, pady=10, sticky='ew')
+    ttk.Button(from_mot_window, text="Upload Excel File/להעלות את קובץ ידוע לפיתוח", command=lambda: upload_excel_file()).grid(row=1, column=0, padx=10, pady=10, sticky='ew')
+    ttk.Button(from_mot_window, text="Select ZIP Folder/תיקייה היכן שקבצי הזיפ נמצאים", command=lambda: select_zip_folder()).grid(row=2, column=0, padx=10, pady=10, sticky='ew')
+    ttk.Button(from_mot_window, text="Process Files/לחצו כאן להתחיל", command=lambda: process_files()).grid(row=3, column=0, padx=10, pady=10, sticky='ew')
+
+    # Text widget for output
+    output_text = scrolledtext.ScrolledText(from_mot_window, height=10, width=50)
+    output_text.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky='nsew')
+
+    # Define the file upload functions
+    def upload_text_file():
+        file_path = filedialog.askopenfilename(title="Open text file from ministry", filetypes=[("Text files", "*.txt")])
+        if file_path:
+            output_text.insert(tk.END, f"Loaded text file: {file_path}\n")
+
+    def upload_excel_file():
+        file_path = filedialog.askopenfilename(title="Open Excel file (מכתב יידוע לפיתוח)", filetypes=[("Excel files", "*.xls *.xlsx")])
+        if file_path:
+            output_text.insert(tk.END, f"Loaded Excel file: {file_path}\n")
+
+    def select_zip_folder():
+        folder_path = filedialog.askdirectory(title="Select the folder with ZIP files")
+        if folder_path:
+            output_text.insert(tk.END, f"Selected ZIP folder: {folder_path}\n")
+
+    def process_files():
+        # Placeholder for processing logic
+        output_text.insert(tk.END, "Starting file processing...\n")
+        # Add your processing code here
+        output_text.insert(tk.END, "Files processed successfully!\n")
+
