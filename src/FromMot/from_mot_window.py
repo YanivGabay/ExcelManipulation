@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk, scrolledtext
+from src.FromMot.text_processing import parse_text_file
+
+from constants import EXTRACTION_FORMULA
 
 def open_from_mot_window(root):
     # Create a new top-level window
@@ -24,9 +27,31 @@ def open_from_mot_window(root):
     # Define the file upload functions
     def upload_text_file():
         file_path = filedialog.askopenfilename(title="Open text file from ministry", filetypes=[("Text files", "*.txt")])
+        encodings = ['utf-8', 'windows-1255', 'iso-8859-8']
+        for encoding in encodings:
+            try:
+                with open(file_path, 'r', encoding=encoding) as file:
+                    # Clear the Treeview
+                
+                    text_data = parse_text_file(file)
+                    output_text.insert(tk.END,f"finished loading the text file from ministry")
+            except UnicodeDecodeError:
+                # This exception will trigger if the encoding is incorrect
+                continue  # Try the next encoding
+            except FileNotFoundError:
+                output_text.delete('1.0', tk.END)
+                output_text.insert(tk.END, "Error: File not found.")
+                return  # Exit the function
+            except Exception as e:
+                output_text.delete('1.0', tk.END)
+                output_text.insert(tk.END, f"Error reading file: {e}")
+                return  # Exit the function
+
         if file_path:
             output_text.insert(tk.END, f"Loaded text file: {file_path}\n")
-
+        
+   
+    
     def upload_excel_file():
         file_path = filedialog.askopenfilename(title="Open Excel file (מכתב יידוע לפיתוח)", filetypes=[("Excel files", "*.xls *.xlsx")])
         if file_path:
