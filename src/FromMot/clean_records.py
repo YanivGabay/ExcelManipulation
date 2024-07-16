@@ -13,6 +13,8 @@ def process_record(record,text_area):
 
   
     record = process_street_name(record)
+
+    record = clean_record_fields(record)
     #print(record)
     return record
    except Exception as e:
@@ -24,7 +26,7 @@ def process_postal_codes(record):
 
     
     postal_code = record["postal_code"]
-    #print("before if statem postal_code:",postal_code)
+    print("before if statem postal_code:",postal_code)
     if postal_code == '0000000':
         record["postal_code"] = 'zeros'
         
@@ -36,7 +38,7 @@ def process_postal_codes(record):
         #print("old postal_code:",postal_code)
         postal_code = postal_code[2:] + postal_code[:2]
         record["postal_code"] = postal_code
-        # print("new postal_code:",postal_code)
+        print("new postal_code:",postal_code)
     return record      
   
 def process_full_name(record): 
@@ -47,7 +49,13 @@ def process_full_name(record):
     
     #future check for insertiong into bad records
     
-
+def clean_record_fields(record):
+    # Iterate over each field in the record
+    for key, value in record.items():
+        # Strip leading and trailing spaces and preserve internal spaces between words
+        if isinstance(value, str):
+            record[key] = ' '.join(value.split())
+    return record
    
 def process_street_name(record):
     
