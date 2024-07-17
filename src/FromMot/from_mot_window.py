@@ -3,6 +3,9 @@ from tkinter import filedialog, messagebox, ttk, scrolledtext
 from src.FromMot.text_processing import parse_text_file
 from src.FromMot.clean_records import process_record
 from constants import EXTRACTION_FORMULA
+from src.FromMot.data_to_excel_file import transfter_data_to_excel
+
+text_data = []
 
 def open_from_mot_window(root):
     # State to track the current step
@@ -45,6 +48,7 @@ def open_from_mot_window(root):
     update_button_states()  # Initialize button states
 
     def upload_text_file():
+    
         nonlocal current_step
         file_path = filedialog.askopenfilename(title="Open text file from ministry", filetypes=[("Text files", "*.txt")])
         if file_path:
@@ -74,10 +78,21 @@ def open_from_mot_window(root):
         if current_step != 1:
             messagebox.showerror("Step Error", "Please upload the text file first!")
             return
+
         file_path = filedialog.askopenfilename(title="Open Excel file", filetypes=[("Excel files", "*.xls *.xlsx")])
-        if file_path:
-            output_text.insert(tk.END, "Excel file loaded successfully.\n")
+        if not file_path:
+            messagebox.showinfo("Info", "No file selected!")
+            return  
+
+        try:
+            # Assuming transfter_data_to_excel handles all logic internally
+            transfter_data_to_excel(file_path, text_data, output_text)
             current_step = 2
+            update_button_states()
+            output_text.insert(tk.END, "Excel file loaded and processed successfully.\n")
+        except Exception as e:
+            messagebox.showerror("Excel Loading Error", f"Failed to load or process Excel file: {str(e)}")
+            current_step -= 1  # Decrement the step count
             update_button_states()
 
     def select_zip_folder():

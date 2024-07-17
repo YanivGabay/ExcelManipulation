@@ -18,6 +18,18 @@ FORMAT_CONFIG = {
 }
 
 
+EXCEL_COLUMN_MAPPING = {
+    "full_name": 4, #E
+    "city_name": 5, #F
+    "street_name": 6, #G
+    "house_number": 7, #H
+    "postal_code": 9, #J
+    
+}
+
+# this is the formula taken from the original excel file
+# this translate the response from the txt file TOMOT
+# into the following fields depend on the position, length
 EXTRACTION_FORMULA = [
     # (column_name, start_position, length)
     ("costumer_code", 1, 3),
@@ -60,5 +72,5 @@ EXTRACTION_FORMULA = [
     # "manufacturer_name_corrected" would be used when we know how to handle the duplicate names
     ("production_year", 194, 2),
     ("expiry", 196, 6),
-    # We will need to handle the CONCATENATE function separately
+ 
 ]
