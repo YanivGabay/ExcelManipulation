@@ -22,16 +22,17 @@ def process_record(record,text_area):
         text_area.insert(tk.END, f"Error inside Process_record(): {e}")
 
 
+
+
 def process_postal_codes(record):
 
-    
     postal_code = record["postal_code"]
     print("before if statem postal_code:",postal_code)
+    print("type of postal_code:",type(postal_code))
+    print("length of postal_code:",len(postal_code))
     if postal_code == '0000000':
         record["postal_code"] = 'zeros'
-        
-        
-        
+
     else:
         # Process non-zero postal codes
         # Assuming 7-digit postal code

@@ -41,6 +41,7 @@ EXTRACTION_FORMULA = [
     ("address", 42, 6),
       ("type_of_ownership", 48, 1),
       ("handicap", 49, 1),
+
        ("number_of_offend", 50, 4),
         ("number_of_offend", 54, 3),
          
