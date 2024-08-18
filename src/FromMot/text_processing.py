@@ -8,9 +8,13 @@ def parse_text_file(file):
     for line in file:
         parsed_line = parse_line(line)  # Assume parse_line is defined elsewhere
         #print(f"line before reversing {parsed_line}")
-       # reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  # Assume this function is defined
+        reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  # Assume this function is defined
         column_names = [spec[0] for spec in EXTRACTION_FORMULA]
-        single_line_data = dict(zip(column_names, parsed_line))
+        print(f"line after reversing {reversed_line}")
+        single_line_data = dict(zip(column_names, reversed_line))
+        ## now we get the family and the first name and create a new field called full_name
+        single_line_data['full_name'] = single_line_data['family'] + " " + single_line_data['first_name']
+        
         print(single_line_data)
         text_data.append(single_line_data)
     return text_data
