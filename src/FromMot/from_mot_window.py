@@ -3,7 +3,7 @@ from tkinter import filedialog, messagebox, ttk, scrolledtext
 from src.FromMot.text_processing import parse_text_file
 from src.FromMot.clean_records import process_record
 from constants import EXTRACTION_FORMULA
-from src.FromMot.data_to_excel_file import transfter_data_to_excel
+from src.FromMot.data_to_excel_file import transfer_data_to_excel
 
 class MOTWindow:
     def __init__(self, root):
@@ -72,7 +72,7 @@ class MOTWindow:
 
         file_path = filedialog.askopenfilename(title="Open Excel file", filetypes=[("Excel files", "*.xls *.xlsx")])
         if file_path:
-            transfter_data_to_excel(file_path, self.text_data, self.output_text)
+            transfer_data_to_excel(file_path, self.text_data, self.output_text)
             self.output_text.insert(tk.END, "Excel file loaded and processed successfully.\n")
             self.current_step = 2
             self.update_button_states()
