@@ -23,6 +23,7 @@ EXCEL_COLUMN_MAPPING = {
     "city_name": 5, #F
     "street_name": 6, #G
     "house_number": 7, #H
+    "po_box": 8, #I
     "postal_code": 9, #J
     
 }

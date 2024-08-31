@@ -2,7 +2,7 @@
 
 from constants import EXTRACTION_FORMULA
 import re
-
+from src.FromMot.clean_records import process_record
 def parse_text_file(file):
     text_data = []
     for line in file:
@@ -12,11 +12,11 @@ def parse_text_file(file):
         column_names = [spec[0] for spec in EXTRACTION_FORMULA]
         print(f"line after reversing {reversed_line}")
         single_line_data = dict(zip(column_names, reversed_line))
-        ## now we get the family and the first name and create a new field called full_name
-        single_line_data['full_name'] = single_line_data['family'] + " " + single_line_data['first_name']
+
         
         print(single_line_data)
-        text_data.append(single_line_data)
+        processed_record = process_record(single_line_data)  
+        text_data.append(processed_record)
     return text_data
 
 def extract_mid(text, start_position, length):

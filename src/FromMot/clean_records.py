@@ -3,9 +3,9 @@
 import re
 import tkinter as tk
 
-def process_record(record,text_area):
+def process_record(record):
 
-   try:
+
     record = process_postal_codes(record)
 
   
@@ -17,9 +17,7 @@ def process_record(record,text_area):
     record = clean_record_fields(record)
     #print(record)
     return record
-   except Exception as e:
-        text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, f"Error inside Process_record(): {e}")
+
 
 
 
@@ -27,9 +25,7 @@ def process_record(record,text_area):
 def process_postal_codes(record):
 
     postal_code = record["postal_code"]
-    print("before if statem postal_code:",postal_code)
-    print("type of postal_code:",type(postal_code))
-    print("length of postal_code:",len(postal_code))
+  
     if postal_code == '0000000':
         record["postal_code"] = 'zeros'
 

@@ -4,18 +4,21 @@ from src.FromMot.text_processing import parse_text_file
 from src.FromMot.clean_records import process_record
 from constants import EXTRACTION_FORMULA
 from src.FromMot.data_to_excel_file import transfer_data_to_excel
+from src.FromMot.file_handling import process_zip_files
+
 
 class MOTWindow:
     def __init__(self, root):
         self.root = root
         self.current_step = 0
         self.text_data = []
+        self.excel_file_path = None  # Store the path to the Excel file
         self.setup_gui()
 
     def setup_gui(self):
         # Create a new top-level window
         self.window = tk.Toplevel(self.root)
-        self.window.title("FROM MOT Processing")
+        self.window.title("FROM MOT Processing/ממשרד התחבורה")
         self.window.geometry("600x400")
         self.window.grab_set()  # Make the window modal
 
@@ -28,16 +31,16 @@ class MOTWindow:
         self.output_text.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky='nsew')
 
         # Define buttons
-        self.text_file_btn = ttk.Button(self.window, text="Upload Text File", command=self.upload_text_file)
+        self.text_file_btn = ttk.Button(self.window, text="Upload Text File\להעלות קובץ טקסט ", command=self.upload_text_file)
         self.text_file_btn.grid(row=0, column=0, padx=10, pady=10, sticky='ew')
 
-        self.excel_file_btn = ttk.Button(self.window, text="Upload Excel File", command=self.upload_excel_file)
+        self.excel_file_btn = ttk.Button(self.window, text="Upload Excel File\להעלות קובץ אקסל ידוע פיתוח", command=self.upload_excel_file)
         self.excel_file_btn.grid(row=1, column=0, padx=10, pady=10, sticky='ew')
 
-        self.zip_folder_btn = ttk.Button(self.window, text="Select ZIP Folder", command=self.select_zip_folder)
+        self.zip_folder_btn = ttk.Button(self.window, text="Select ZIP Folder\היכן (תיקייה) של קבצי הזיפ", command=self.select_zip_folder)
         self.zip_folder_btn.grid(row=2, column=0, padx=10, pady=10, sticky='ew')
 
-        self.process_btn = ttk.Button(self.window, text="Process Files", command=self.process_files)
+        self.process_btn = ttk.Button(self.window, text="Process Files\עדכון סופי ", command=self.process_files)
         self.process_btn.grid(row=3, column=0, padx=10, pady=10, sticky='ew')
 
         self.update_button_states()
@@ -49,7 +52,7 @@ class MOTWindow:
         self.process_btn.config(state='normal' if self.current_step == 3 else 'disabled')
 
     def upload_text_file(self):
-        file_path = filedialog.askopenfilename(title="Open text file from ministry", filetypes=[("Text files", "*.txt")])
+        file_path = filedialog.askopenfilename(title="Open text file from ministry\לבחור את קובץ הטקסט ממשרד התחבורה", filetypes=[("Text files", "*.txt")])
         if file_path:
             encodings = ['utf-8', 'windows-1255', 'iso-8859-8']
             for encoding in encodings:
@@ -70,8 +73,10 @@ class MOTWindow:
             messagebox.showerror("Step Error", "Please upload the text file first!")
             return
 
-        file_path = filedialog.askopenfilename(title="Open Excel file", filetypes=[("Excel files", "*.xls *.xlsx")])
+        file_path = filedialog.askopenfilename(title="Open Excel file\קובץ יידוע לפיתוח", filetypes=[("Excel files", "*.xls *.xlsx")])
         if file_path:
+            ## saving the path to the excel file 
+            self.excel_file_path = file_path
             transfer_data_to_excel(file_path, self.text_data, self.output_text)
             self.output_text.insert(tk.END, "Excel file loaded and processed successfully.\n")
             self.current_step = 2
@@ -81,9 +86,10 @@ class MOTWindow:
         if self.current_step != 2:
             messagebox.showerror("Step Error", "Please upload the Excel file first!")
             return
-        folder_path = filedialog.askdirectory(title="Select the folder with ZIP files")
+        folder_path = filedialog.askdirectory(title="Select the folder with ZIP files\התיקייה בה נמצאים קבצי הזיפ")
         if folder_path:
-            self.output_text.insert(tk.END, "ZIP folder selected successfully.\n")
+            process_zip_files(folder_path,self.excel_file_path,self.output_text)
+            self.output_text.insert(tk.END, "ZIP folder processed successfully.\n")
             self.current_step = 3
             self.update_button_states()
 
