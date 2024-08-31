@@ -5,7 +5,7 @@ from src.FromMot.clean_records import process_record
 from constants import EXTRACTION_FORMULA
 from src.FromMot.data_to_excel_file import transfer_data_to_excel
 from src.FromMot.file_handling import process_zip_files
-
+import os
 
 class MOTWindow:
     def __init__(self, root):
@@ -31,35 +31,37 @@ class MOTWindow:
         self.output_text.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky='nsew')
 
         # Define buttons
-        self.text_file_btn = ttk.Button(self.window, text="Upload Text File\להעלות קובץ טקסט ", command=self.upload_text_file)
+        self.text_file_btn = ttk.Button(self.window, text="להעלות קובץ טקסט ", command=self.upload_text_file)
         self.text_file_btn.grid(row=0, column=0, padx=10, pady=10, sticky='ew')
 
-        self.excel_file_btn = ttk.Button(self.window, text="Upload Excel File\להעלות קובץ אקסל ידוע פיתוח", command=self.upload_excel_file)
+        self.excel_file_btn = ttk.Button(self.window, text="להעלות קובץ אקסל ידוע פיתוח", command=self.upload_excel_file)
         self.excel_file_btn.grid(row=1, column=0, padx=10, pady=10, sticky='ew')
 
-        self.zip_folder_btn = ttk.Button(self.window, text="Select ZIP Folder\היכן (תיקייה) של קבצי הזיפ", command=self.select_zip_folder)
+        self.zip_folder_btn = ttk.Button(self.window, text="היכן (תיקייה) של קבצי הזיפ", command=self.select_zip_folder)
         self.zip_folder_btn.grid(row=2, column=0, padx=10, pady=10, sticky='ew')
 
-        self.process_btn = ttk.Button(self.window, text="Process Files\עדכון סופי ", command=self.process_files)
-        self.process_btn.grid(row=3, column=0, padx=10, pady=10, sticky='ew')
+        self.exit_btn = ttk.Button(self.window, text="סיום התכנית", command=self.exit_program)
+        self.exit_btn.grid(row=3, column=0, padx=10, pady=10, sticky='ew')
+        self.exit_btn.config(state='disabled')  # Initially disabled
 
         self.update_button_states()
 
     def update_button_states(self):
-        self.text_file_btn.config(state='normal' if self.current_step == 0 else 'disabled')
-        self.excel_file_btn.config(state='normal' if self.current_step == 1 else 'disabled')
-        self.zip_folder_btn.config(state='normal' if self.current_step == 2 else 'disabled')
-        self.process_btn.config(state='normal' if self.current_step == 3 else 'disabled')
+        states = ['normal', 'disabled']
+        self.text_file_btn.config(state=states[self.current_step != 0])
+        self.excel_file_btn.config(state=states[self.current_step != 1])
+        self.zip_folder_btn.config(state=states[self.current_step != 2])
+        self.exit_btn.config(state=states[self.current_step != 3])
 
     def upload_text_file(self):
-        file_path = filedialog.askopenfilename(title="Open text file from ministry\לבחור את קובץ הטקסט ממשרד התחבורה", filetypes=[("Text files", "*.txt")])
+        file_path = filedialog.askopenfilename(title="בחר את קובץ הטקסט ממשרד התחבורה", filetypes=[("Text files", "*.txt")])
         if file_path:
             encodings = ['utf-8', 'windows-1255', 'iso-8859-8']
             for encoding in encodings:
                 try:
                     with open(file_path, 'r', encoding=encoding) as file:
                         self.text_data = parse_text_file(file)
-                        self.output_text.insert(tk.END, "Text file loaded successfully.\n")
+                        self.output_text.insert(tk.END, "קובץ הטקסט נטען בהצלחה.\n")
                         self.current_step = 1
                         self.update_button_states()
                         return
@@ -78,7 +80,7 @@ class MOTWindow:
             ## saving the path to the excel file 
             self.excel_file_path = file_path
             transfer_data_to_excel(file_path, self.text_data, self.output_text)
-            self.output_text.insert(tk.END, "Excel file loaded and processed successfully.\n")
+            self.output_text.insert(tk.END, "קובץ האקסל נטען ועובד בהצלחה.\n")
             self.current_step = 2
             self.update_button_states()
 
@@ -93,14 +95,11 @@ class MOTWindow:
             self.current_step = 3
             self.update_button_states()
 
-    def process_files(self):
-        if self.current_step != 3:
-            messagebox.showerror("Step Error", "Please complete all previous steps!")
-            return
-        self.output_text.insert(tk.END, "Processing files...\n")
-        self.output_text.insert(tk.END, "Files processed successfully!\n")
-        self.current_step = 0
-        self.update_button_states()
+    def exit_program(self):
+            if messagebox.askyesno("פתיחת התיקייה עם קובץ האקסל", "לפתוח את התיקייה המכילה את קובץ האקסל?"):
+                folder_path = os.path.dirname(self.excel_file_path)
+                os.startfile(folder_path)
+            self.window.destroy()
 
 def open_from_mot_window(root):
     MOTWindow(root)
