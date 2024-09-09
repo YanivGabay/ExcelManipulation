@@ -47,8 +47,10 @@ def transfer_data_to_excel(file_path, text_data, output_text):
 
         # Saving changes if any rows were updated
         if rows_updated > 0:
+
             with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
                 df.to_excel(writer, index=False)
+                
             output_text.insert(tk.END, f"Excel file updated: {rows_updated} rows modified out of {total_rows} processed.\n")
         else:
             output_text.insert(tk.END, "No rows modified.\n")

@@ -27,4 +27,4 @@ def save_text_file(content, filename='default_to_mot.txt'):
     """ Save the content to a text file with UTF-8 encoding and Windows CRLF. """
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(content)
-    messagebox.showinfo("Success", f"File '{filename}' saved successfully!")
+    messagebox.showinfo("הצלחה!", f"קובץ נשמר בהצלחה ב-{filename}")
