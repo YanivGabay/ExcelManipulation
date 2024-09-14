@@ -6,9 +6,11 @@
 def apply_formula(row, today, config):
     """Apply formatting based on the given configuration."""
     # Access by position using .iloc
-    first_part = str(row.iloc[0]).zfill(8)
+    # row,iloc[1] is the car number
+    # row.iloc[0] is the customer code
+    first_part = str(row.iloc[1]).zfill(8)
     date_part = today.strftime(config['date_format'])
-    last_part = str(row.iloc[1]).zfill(6)
+    last_part = str(row.iloc[0]).zfill(6)
 
     # Combine all parts with specific spacings
     formatted_string = (

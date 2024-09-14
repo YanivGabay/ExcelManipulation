@@ -14,7 +14,7 @@ FORMAT_CONFIG = {
     'spaces_after_start': 0,
     'spaces_between_first_date': 11,
     'spaces_between_date_last': 20,
-    'spaces_between_last_end': 19
+    'spaces_between_last_end': 18
 }
 
 
