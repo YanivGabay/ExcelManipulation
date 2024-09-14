@@ -14,3 +14,8 @@ tempCodeRunnerFile.py
 /dist/
 /Doxygen/
 main.spec
+./venv/
+./__pycache__/
+./__pycache__/*
+./venv
+/venv
