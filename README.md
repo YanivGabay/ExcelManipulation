@@ -1,20 +1,66 @@
-# ExcelManipulation
-![image](https://github.com/YanivGabay/ExcelManipulation/assets/154590609/a6af9838-cc8f-473f-99d0-adfd31ed24c4)
 
-First Version.
-Gui for replacing the manual work.
-Proccess:
-1. load excel file
-2. the program will automaticly unzip the zip files on the adress col.
-3. will delete the not necceseray pictures, and change the name of the incident picture to "address+moment"
-4. will convert them to png from jpg. ![image](https://github.com/YanivGabay/ExcelManipulation/assets/154590609/56e272ee-cba7-4c3b-8bde-1d13cbe7d22d)
+# Ministry Handler Program
 
-5. after this step has been completed we can load the TEXT file from the driving ministiry.
-6. than the program should cross the adresses and ID, and for each one fill the values.
-7. will marker in RED bad results (no id found, missing some importants cols,new owner) ![image](https://github.com/YanivGabay/ExcelManipulation/assets/154590609/b8c881df-320c-451d-a85d-2205b2e93209)
-8. will marker in BLUE results which has special unique adress (only po box)
-9. than, we can export to a new excel to_dfus_date, which will create the needed cols into a new file.
-10. finish.
+## About
 
+The Ministry Handler Program is developed by me (Yaniv Gabay) for **שומרי הדרך** [Shomrei HaDerech](https://www.shomriderech.org.il/), a non-profit group working with the Driving Ministry in Israel.
+This application is designed to help the office staff to process text file into excel file and vice versa.
+The text files and excel files contain personal drivers information, due to the sensitivity of the data, the specific files are not shared in this repository.
 
+## Features
+
+- Load an excel file with the drivers information.
+- Create a text file processed from that previous excel file, with the specific format needed.
+- The staff should receive an text file as response from the driving ministry, and the program will process it into an excel file.
+- Processed the new excel file, clean , extract zip files and create a new excel file with the staff wanted information.
+- User-friendly GUI for easy interaction.
+
+## Installation
+
+The program can be run as a standalone executable or directly from the Python script. Below are the steps for both methods:
+
+### Running the Executable
+
+1. Download the latest version of the executable from the Releases section.
+2. Double-click on the executable to start the program.
+
+### Running from Source
+
+1. Ensure that Python 3.x is installed on your machine.
+2. Clone this repository or download the source code.
+3. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run the program:
+
+   ```bash
+   python main.py
+   ```
+
+### Building the Executable
+
+To generate a `.exe` file for easier distribution and use, follow these steps:
+
+1. Navigate to the project directory.
+2. Use PyInstaller with the following command:
+   
+   ```bash
+   pyinstaller --onefile --windowed main.py
+   ```
+
+## Usage
+
+To use the program:
+
+1. Start the program via the executable or the Python script.
+2. Follow the on-screen instructions to load files and perform data operations.
+
+d parties. Redistribution or commercial use is not permitted without explicit permission.
+
+## Contact
+
+For more information or assistance, please contact me at [yaniv242@gmail.com](yaniv242@gmail.com).
 
