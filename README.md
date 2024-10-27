@@ -34,13 +34,30 @@ The program can be run as a standalone executable or directly from the Python sc
 
 1. Ensure that Python 3.x is installed on your machine.
 2. Clone this repository or download the source code.
-3. Install dependencies:
+3. Create dedicated virtual environment:
+
+   ```bash
+   python -m venv venv
+   ```
+
+   Activate the virtual environment:
+
+   - Windows: `venv\Scripts\Activate.ps`
+   - Linux/Mac: `source venv/bin/activate`
+
+   i needed to add to the activate file the following line:
+   ```bash
+   $Env:TCL_LIBRARY="C:\Users\Yaniv\AppData\Local\Programs\Python\Python313\tcl\tcl8.6"
+   ``` 
+   had problem with the tkinter library.
+   
+4. Install dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Run the program:
+5. Run the program:
 
    ```bash
    python main.py
