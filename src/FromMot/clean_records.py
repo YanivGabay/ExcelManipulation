@@ -27,7 +27,7 @@ def process_postal_codes(record):
     postal_code = record["postal_code"]
   
     if postal_code == '0000000':
-        record["postal_code"] = 'zeros'
+        record["postal_code"] = '00000'
 
     else:
         # Process non-zero postal codes
