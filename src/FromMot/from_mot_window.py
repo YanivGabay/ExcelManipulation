@@ -14,6 +14,7 @@ class MOTWindow:
         self.current_step = 0
         self.text_data = []
         self.excel_file_path = None  # Store the path to the Excel file
+        self.output_folder = None  # Store the path to the output folder
         self.setup_gui()
         self.export_window = None
         self.column_vars = {}
@@ -87,6 +88,7 @@ class MOTWindow:
         if file_path:
             ## saving the path to the excel file 
             self.excel_file_path = file_path
+            self.output_folder = os.path.dirname(file_path)
             transfer_data_to_excel(file_path, self.text_data, self.output_text)
             self.output_text.insert(tk.END, "קובץ האקסל נטען ועובד בהצלחה.\n")
             self.current_step = 2

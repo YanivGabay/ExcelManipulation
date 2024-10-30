@@ -27,7 +27,7 @@ def transfer_data_to_excel(file_path, text_data, output_text):
         vehicle_number_col_index = 10  # Adjust as needed for the correct column index for vehicle numbers
         ### GAL SAID THIS IS OUR "KEY"
         df['standardized_vehicle_number'] = df.iloc[:, vehicle_number_col_index].apply(standardize_vehicle_number)
-
+        
         total_rows = 0
         rows_updated = 0
         unmatched_vehicles = []

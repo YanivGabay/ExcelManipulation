@@ -3,12 +3,13 @@
 from constants import EXTRACTION_FORMULA
 import re
 from src.FromMot.clean_records import process_record
-def parse_text_file(file):
+
+def parse_text_file(file) -> list:
     text_data = []
     for line in file:
-        parsed_line = parse_line(line)  # Assume parse_line is defined elsewhere
+        parsed_line = parse_line(line)  
         #print(f"line before reversing {parsed_line}")
-        reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  # Assume this function is defined
+        reversed_line = [reverse_word_if_hebrew(word) for word in parsed_line]  
         column_names = [spec[0] for spec in EXTRACTION_FORMULA]
         print(f"line after reversing {reversed_line}")
         single_line_data = dict(zip(column_names, reversed_line))
