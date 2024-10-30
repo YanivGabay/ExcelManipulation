@@ -21,7 +21,7 @@ def update_excel_row(df, row_index, record):
                 updates_made += 1
     return updates_made
 
-def transfer_data_to_excel(file_path, text_data, output_text):
+def transfer_data_to_excel(file_path, text_data, output_text, rules_df):
     try:
         df = pd.read_excel(file_path, dtype=str)
         vehicle_number_col_index = 10  # Adjust as needed for the correct column index for vehicle numbers
@@ -42,6 +42,7 @@ def transfer_data_to_excel(file_path, text_data, output_text):
                 for row_index in row_indices:
                     if update_excel_row(df, row_index, record) > 0:
                         rows_updated += 1
+                        add_rules_to_excel(df, row_index, record, rules_df)
             else:
                 unmatched_vehicles.append(vehicle_number_from_record)
 
@@ -64,6 +65,20 @@ def transfer_data_to_excel(file_path, text_data, output_text):
     except Exception as e:
         messagebox.showerror("Excel Error", f"Failed to update Excel file: {str(e)}")
         print(f"Exception occurred: {e}")
+def add_rules_to_excel(df, row_index, record, rules_df):
+
+    value_in_p = df.at[row_index,'P']
+    matched_rule = rules_df[rules_df[rules_df['B']] == value_in_p]
+
+    if not matched_rule.empty:
+        rule_row = matched_rule.iloc[0]
+        df.at[row_index,'V'] = rule_row['H']
+        # W and I
+        df.at[row_index,'W'] = rule_row['I']
+        #X and F
+        df.at[row_index,'X'] = rule_row['F']
+        # Y and G
+        df.at[row_index,'Y'] = rule_row['G']
 
 '''
 def transfter_data_to_excel(file_path, text_data, output_text):

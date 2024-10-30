@@ -18,6 +18,7 @@ class MOTWindow:
         self.setup_gui()
         self.export_window = None
         self.column_vars = {}
+        self.rules_df = None
 
     def setup_gui(self):
         # Create a new top-level window
@@ -26,6 +27,15 @@ class MOTWindow:
         self.window.geometry("600x400")
         self.window.grab_set()  # Make the window modal
 
+        #load an excel file into a dataframe
+        # name will always be:סיווג עבירות למכתב.xlsx
+        # on the same folder as the script
+        self.rules_df = pd.read_excel('סיווג עבירות למכתב.xlsx')
+        if self.rules_df.empty:
+            
+            messagebox.showerror("Error", "אין קובץ סיווג עבירות למכתב.xlsx בתיקיית הסקריפט")
+            return
+        
         # Layout using grid
         self.window.grid_columnconfigure(0, weight=1)
         self.window.grid_columnconfigure(1, weight=3)
@@ -89,7 +99,11 @@ class MOTWindow:
             ## saving the path to the excel file 
             self.excel_file_path = file_path
             self.output_folder = os.path.dirname(file_path)
-            transfer_data_to_excel(file_path, self.text_data, self.output_text)
+            
+            transfer_data_to_excel(file_path, self.text_data, self.output_text,self.rules_df)
+           
+           
+           
             self.output_text.insert(tk.END, "קובץ האקסל נטען ועובד בהצלחה.\n")
             self.current_step = 2
             self.update_button_states()
