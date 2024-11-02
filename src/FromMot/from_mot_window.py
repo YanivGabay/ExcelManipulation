@@ -19,6 +19,7 @@ class MOTWindow:
         self.export_window = None
         self.column_vars = {}
         self.rules_df = None
+        self.rules_list = []
 
     def setup_gui(self):
         # Create a new top-level window
@@ -35,6 +36,10 @@ class MOTWindow:
             
             messagebox.showerror("Error", "אין קובץ סיווג עבירות למכתב.xlsx בתיקיית הסקריפט")
             return
+        else:
+            self.output_text.insert(tk.END, "קובץ סיווג עבירות למכתב נטען בהצלחה.\n")
+            self.rules_list = self.rules_df['B'].tolist()
+
         
         # Layout using grid
         self.window.grid_columnconfigure(0, weight=1)
@@ -100,7 +105,7 @@ class MOTWindow:
             self.excel_file_path = file_path
             self.output_folder = os.path.dirname(file_path)
             
-            transfer_data_to_excel(file_path, self.text_data, self.output_text,self.rules_df)
+            transfer_data_to_excel(file_path, self.text_data, self.output_text,self.rules_df,self.rules_list)
            
            
            

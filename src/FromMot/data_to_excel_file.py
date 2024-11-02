@@ -11,7 +11,7 @@ def standardize_vehicle_number(vehicle_number, length=8):
     """Standardize the vehicle number to ensure it has the correct number of digits."""
     return str(vehicle_number).zfill(length)
 
-def update_excel_row(df, row_index, record):
+def update_excel_row(df, row_index, record, rules_df, rules_list):
     """Update Excel row with data from the record based on a mapping."""
     updates_made = 0
     for field, excel_col_index in EXCEL_COLUMN_MAPPING.items():
@@ -21,14 +21,18 @@ def update_excel_row(df, row_index, record):
                 df.iat[row_index, excel_col_index] = value_to_insert
                 updates_made += 1
     if updates_made > 0:
-        rules_row_index = df.index[df['B'] == df.iat[row_index, 'P']].tolist()
-        for original_column, rules_col_value in RULES_COLUMN_MAPPING.items():
-            df.iat[row_index, original_column] = df.iat[rules_row_index, rules_col_value]
-
-        
+        # Check if the value in column 'P' matches any value in the rules_list
+        value_in_p_column = df.iat[row_index, df.columns.get_loc("P")]
+        if value_in_p_column in rules_list:
+            # Find the index of the matching value in the rules_list
+            rules_row_index = rules_list.index(value_in_p_column)
+            
+            # Update the row with values from the rules_df based on RULES_COLUMN_MAPPING
+            for original_column, rules_col_value in RULES_COLUMN_MAPPING.items():
+                df.iat[row_index, df.columns.get_loc(original_column)] = rules_df.iat[rules_row_index, rules_col_value]
     return updates_made
 
-def transfer_data_to_excel(file_path, text_data, output_text, rules_df):
+def transfer_data_to_excel(file_path, text_data, output_text, rules_df, rules_list):
     try:
         df = pd.read_excel(file_path, dtype=str)
         vehicle_number_col_index = 10  # Adjust as needed for the correct column index for vehicle numbers
@@ -47,9 +51,9 @@ def transfer_data_to_excel(file_path, text_data, output_text, rules_df):
 
             if row_indices:
                 for row_index in row_indices:
-                    if update_excel_row(df, row_index, record) > 0:
+                    if update_excel_row(df, row_index, record,rules_df,rules_list) > 0:
                         rows_updated += 1
-                        add_rules_to_excel(df, row_index, record, rules_df)
+                        
             else:
                 unmatched_vehicles.append(vehicle_number_from_record)
 
@@ -72,54 +76,3 @@ def transfer_data_to_excel(file_path, text_data, output_text, rules_df):
     except Exception as e:
         messagebox.showerror("Excel Error", f"Failed to update Excel file: {str(e)}")
         print(f"Exception occurred: {e}")
-def add_rules_to_excel(df, row_index, record, rules_df):
-
-    value_in_p = df.at[row_index,'P']
-    matched_rule = rules_df[rules_df[rules_df['B']] == value_in_p]
-
-    if not matched_rule.empty:
-        rule_row = matched_rule.iloc[0]
-        df.at[row_index,'V'] = rule_row['H']
-        # W and I
-        df.at[row_index,'W'] = rule_row['I']
-        #X and F
-        df.at[row_index,'X'] = rule_row['F']
-        # Y and G
-        df.at[row_index,'Y'] = rule_row['G']
-
-'''
-def transfter_data_to_excel(file_path, text_data, output_text):
-    try:
-        # Load the Excel file
-        df = pd.read_excel(file_path)
-        xlsx_file_path = file_path.replace('.xls', '.xlsx')
-        
-        # Ensure the DataFrame is updated to the new file
-        df.to_excel(xlsx_file_path, index=False)
-        
-        # Iterate over each record
-        for record in text_data:
-            vehicle_number_from_record = record.get('vehicle_number')  # Get the vehicle number from the record
-            print(f"Processing record with vehicle number: {vehicle_number_from_record}")
-            
-            # Find the row index where the vehicle number column matches the vehicle number from the record
-            if vehicle_number_from_record in df.iloc[:, 10].values:
-                row_index = df.index[df.iloc[:, 10] == vehicle_number_from_record].tolist()
-                if row_index:
-                    row_index = row_index[0]  # Get the first matching index if there are multiple
-                    print(f"Found matching vehicle number: {vehicle_number_from_record} at row {row_index}")
-                    # Update columns based on the mapping and the record's data
-                    for field, excel_col_index in EXCEL_COLUMN_MAPPING.items():
-                        if field in record:
-                            print(f"Updating field: {field} with value: {record[field]}")
-                            df.at[row_index, df.columns[excel_col_index]] = record[field]
-
-            # Save the modified DataFrame back to the Excel file
-            with pd.ExcelWriter(xlsx_file_path) as writer:
-                    df.to_excel(writer,index=False)
-       
-            output_text.insert(tk.END, "Excel file updated successfully based on vehicle numbers.\n")
-  
-    except Exception as e:
-        messagebox.showerror("Excel Error", f"Failed to update Excel file: {str(e)}")
-'''
