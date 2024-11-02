@@ -11,7 +11,7 @@ def standardize_vehicle_number(vehicle_number, length=8):
     """Standardize the vehicle number to ensure it has the correct number of digits."""
     return str(vehicle_number).zfill(length)
 
-def update_excel_row(df, row_index, record, rules_df, rules_list):
+def update_excel_row(df, row_index, record, rules_df, rules_list)->int:
     """Update Excel row with data from the record based on a mapping."""
     updates_made = 0
     for field, excel_col_index in EXCEL_COLUMN_MAPPING.items():
@@ -58,6 +58,8 @@ def transfer_data_to_excel(file_path, text_data, output_text, rules_df, rules_li
                 unmatched_vehicles.append(vehicle_number_from_record)
 
         # Saving changes if any rows were updated
+        
+
         if rows_updated > 0:
 
             with pd.ExcelWriter(file_path, engine='openpyxl') as writer:

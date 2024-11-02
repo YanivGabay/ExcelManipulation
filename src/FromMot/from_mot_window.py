@@ -106,8 +106,7 @@ class MOTWindow:
             self.output_folder = os.path.dirname(file_path)
             
             transfer_data_to_excel(file_path, self.text_data, self.output_text,self.rules_df,self.rules_list)
-           
-           
+            
            
             self.output_text.insert(tk.END, "קובץ האקסל נטען ועובד בהצלחה.\n")
             self.current_step = 2

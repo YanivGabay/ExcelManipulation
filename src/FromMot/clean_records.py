@@ -2,6 +2,7 @@
 
 import re
 import tkinter as tk
+from datetime import datetime
 
 def process_record(record):
 
@@ -17,9 +18,6 @@ def process_record(record):
     record = clean_record_fields(record)
     #print(record)
     return record
-
-
-
 
 
 def process_postal_codes(record):
