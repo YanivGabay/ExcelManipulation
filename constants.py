@@ -17,6 +17,16 @@ FORMAT_CONFIG = {
     'spaces_between_last_end': 18
 }
 
+RULES_COLUMN_MAPPING = {
+    #H into V
+    #I into W
+    #F into X
+    #G into Y
+    "H": "V",
+    "I": "W",
+    "F": "X",
+    "G": "Y"
+}
 
 EXCEL_COLUMN_MAPPING = {
     "full_name": 4, #E

@@ -2,6 +2,7 @@ import pandas as pd
 from tkinter import messagebox
 from constants import EXCEL_COLUMN_MAPPING
 import tkinter as tk
+from constants import RULES_COLUMN_MAPPING
 
 
 
@@ -19,6 +20,12 @@ def update_excel_row(df, row_index, record):
             if df.iat[row_index, excel_col_index] != value_to_insert:  # Check if the update is necessary
                 df.iat[row_index, excel_col_index] = value_to_insert
                 updates_made += 1
+    if updates_made > 0:
+        rules_row_index = df.index[df['B'] == df.iat[row_index, 'P']].tolist()
+        for original_column, rules_col_value in RULES_COLUMN_MAPPING.items():
+            df.iat[row_index, original_column] = df.iat[rules_row_index, rules_col_value]
+
+        
     return updates_made
 
 def transfer_data_to_excel(file_path, text_data, output_text, rules_df):
