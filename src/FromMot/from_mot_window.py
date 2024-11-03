@@ -189,7 +189,8 @@ class MOTWindow:
                 messagebox.showerror("Path Error", "Excel file path is not set.")
                 return
             try:
-                process_zip_files(folder_path, self.excel_file_path, self.output_text)
+                if self.full_df and self.output_folder is not None:
+                    self.full_df = process_zip_files(folder_path, self.full_df,self.output_folder)
                 self.output_text.insert(tk.END, "ZIP folder processed successfully.\n")
                 self.current_step = 3
                 self.update_button_states()
@@ -198,13 +199,17 @@ class MOTWindow:
                 self.output_text.insert(tk.END, f"Error: {str(e)}\n")
 
 
-    def export_selected_columns(self, df: pd.DataFrame) -> None:
-        """Export the selected columns to a new Excel file."""
-      
+    def export_output_file(self, df: pd.DataFrame) -> None:
+              
         data_to_export: pd.DataFrame = df
         today: str = pd.Timestamp.today().strftime("%Y-%m-%d")
-        new_file_name: str = f"selected_columns_export_{today}.xlsx"
-        export_path: str = os.path.join(os.path.dirname(self.excel_file_path or ""), new_file_name)
+        new_file_name: str = f"output_{today}.xlsx"
+         
+        if self.output_folder is None:
+            return
+        export_path: str = os.path.join(self.output_folder, new_file_name)
+
+
         try:
             data_to_export.to_excel(export_path, index=False)
             messagebox.showinfo("Success", "קובץ סופי יוצר בהצלחה.")
@@ -224,7 +229,7 @@ class MOTWindow:
         if self.full_df is None:
             messagebox.showerror("Error", "No data to export.")
             return
-        self.export_selected_columns(self.full_df)
+        self.export_output_file(self.full_df)
         
 
     def exit_program(self) -> None:
