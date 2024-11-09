@@ -28,6 +28,19 @@ RULES_COLUMN_MAPPING = {
     "G": "Y"
 }
 
+NEW_COLUMN_NAMES = {
+    # V into כותרת
+    # W into  מלל
+    # X into סכום הקנס
+    # Y into נקודות
+
+    "V": "כותרת",
+    "W": "מלל",
+    "X": "סכום הקנס",
+    "Y": "נקודות"
+
+    }
+
 EXCEL_COLUMN_MAPPING = {
     "full_name": 4, #E
     "city_name": 5, #F

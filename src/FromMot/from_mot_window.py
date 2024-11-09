@@ -5,7 +5,7 @@ from tkinter import filedialog, messagebox, ttk, scrolledtext
 from typing import Any, Dict, List, Optional
 from src.FromMot.text_processing import parse_text_file
 from src.FromMot.clean_records import process_record
-from constants import EXTRACTION_FORMULA
+from constants import EXTRACTION_FORMULA,NEW_COLUMN_NAMES
 from src.FromMot.data_to_excel_file import transfer_data_to_excel
 from src.FromMot.file_handling import process_zip_files
 import os
@@ -215,6 +215,9 @@ class MOTWindow:
 
 
         try:
+            for column,new_name in NEW_COLUMN_NAMES.items():
+                new_col_index = ord(column) - ord('A')  # Convert letter to 0-based index
+                data_to_export.columns.values[new_col_index] = new_name
             data_to_export.to_excel(export_path, index=False)
             messagebox.showinfo("Success", "קובץ סופי יוצר בהצלחה.")
             
@@ -248,6 +251,9 @@ class MOTWindow:
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open folder: {str(e)}")
         self.window.destroy()
+        #exit the program totally
+        self.root.quit()
+
 
 
 def open_from_mot_window(root: tk.Tk) -> None:
