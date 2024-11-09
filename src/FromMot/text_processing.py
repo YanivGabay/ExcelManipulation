@@ -31,6 +31,6 @@ def parse_line(line):
 
     return extracted_values
 
-def reverse_word_if_hebrew(word):
+def reverse_word_if_hebrew(word : str) -> str:
     hebrew_check = re.compile('[\u0590-\u05FF]+')
     return word[::-1] if hebrew_check.search(word) else word    

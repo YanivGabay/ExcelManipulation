@@ -2,6 +2,7 @@ import datetime
 import pandas as pd
 from tkinter import messagebox
 from typing import Any, Dict, List, Tuple
+from src.FromMot.text_processing import reverse_word_if_hebrew
 from constants import EXCEL_COLUMN_MAPPING, RULES_COLUMN_MAPPING
 import tkinter as tk
 
@@ -32,7 +33,7 @@ def update_excel_row(
         if value_in_p_column in rules_list:
             # Find the index of the matching value in the rules_list
             rules_row_index = rules_list.index(value_in_p_column)
-            print(f"Found matching value '{value_in_p_column}' at index {rules_row_index} in rules list")
+            #print(f"Found matching value '{value_in_p_column}' at index {rules_row_index} in rules list")
 
             # Update the row with values from the rules_df based on RULES_COLUMN_MAPPING
             # the rules are letters mapping, example:     #H into V
@@ -47,7 +48,7 @@ def update_excel_row(
                 excel_col_index = ord(rule_to) - ord('A')
                 df.iat[row_index, excel_col_index] = value_to_insert
         else:
-            print(f"Value '{value_in_p_column}' not found in rules list")
+            print(f"Value '{reverse_word_if_hebrew(value_in_p_column)}' not found in rules list")
             
             
                     
@@ -127,8 +128,9 @@ def bad_owner(row_data,df : pd.DataFrame,row_index):
         # Assuming the year is in the 2000s
         ownership_date_clean = datetime.datetime.strptime(ownership_date, "%d%m%y")
         #print after conversion
-        print(f"comparing Report Date: {report_date_clean}, Ownership Date: {ownership_date_clean}")
+        
         if ownership_date_clean > report_date_clean:
+            print(f"found bad: Report Date: {report_date_clean}, Ownership Date: {ownership_date_clean}")
             return True
         return False
 
