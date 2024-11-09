@@ -127,7 +127,7 @@ def clean_and_process_files(extract_path: str, zip_file_name: str, full_df: pd.D
                     # Update the Excel file with the new file name where the vehicle number matches the ZIP file name
                     row_indices = df.index[df.iloc[:, id_of_report] == zip_file_name].tolist()
                     for row_index in row_indices:
-                        df.iat[row_index, update_col_index] = new_file_name
+                        df.iat[row_index, update_col_index+1] = new_file_name
                         has_updated = True
                         print(f"Updated Excel row {row_index} with new file name '{new_file_name}'")
                 except Exception as e:

@@ -1,3 +1,4 @@
+import datetime
 import pandas as pd
 from tkinter import messagebox
 from typing import Any, Dict, List, Tuple
@@ -27,24 +28,30 @@ def update_excel_row(
                 df.iat[row_index, excel_col_index] = value_to_insert
                 updates_made += 1
     if updates_made > 0:
-        # Check if the value in column 'P' matches any value in the rules_list
-        try:
-            p_column_loc = df.columns.get_loc("P")
-            value_in_p_column = df.iat[row_index, p_column_loc]
-        except KeyError:
-            raise ValueError("Column 'P' not found in the Excel file.")
-        
+        value_in_p_column = df.iat[row_index, 15]
         if value_in_p_column in rules_list:
             # Find the index of the matching value in the rules_list
             rules_row_index = rules_list.index(value_in_p_column)
+            print(f"Found matching value '{value_in_p_column}' at index {rules_row_index} in rules list")
 
             # Update the row with values from the rules_df based on RULES_COLUMN_MAPPING
-            for original_column, rules_col_index in RULES_COLUMN_MAPPING.items():
-                try:
-                    original_col_loc = df.columns.get_loc(original_column)
-                    df.iat[row_index, original_col_loc] = rules_df.iat[rules_row_index, rules_col_index]
-                except KeyError:
-                    raise ValueError(f"Column '{original_column}' not found in the Excel file.")
+            # the rules are letters mapping, example:     #H into V
+                                                          #I into W
+                                                          #F into X
+                                                          #G into Y
+            # its means, take the value from the column index H (rules_df) at the rules_row_index
+            # and put it into the column index V (df) at the row_index
+            for rule_from, rule_to in RULES_COLUMN_MAPPING.items():
+                rules_col_index = ord(rule_from) - ord('A')  # Convert letter to 0-based index
+                value_to_insert = rules_df.iat[rules_row_index, rules_col_index]
+                excel_col_index = ord(rule_to) - ord('A')
+                df.iat[row_index, excel_col_index] = value_to_insert
+        else:
+            print(f"Value '{value_in_p_column}' not found in rules list")
+            
+            
+                    
+           
     return updates_made
 
 
@@ -86,13 +93,42 @@ def transfer_data_to_excel(
                 for row_index in row_indices:
                     if update_excel_row(df, row_index, record, rules_df, rules_list) > 0:
                         rows_updated += 1
+                    
+                    if bad_owner(record,df,row_index):
+                        df.at[row_index, 'BAD RECORD'] = True
             else:
                 unmatched_vehicles.append(vehicle_number_from_record)
 
-     
+            # now we need to check if the ownership date inside the record, is smaller than the report date which is in the df
+            # if it isnt, we create a new col called BAD RECORD and put the value inside to true
+          #("ownership_date", 156, 6),
                         
 
         return rows_updated, total_rows, unmatched_vehicles,df
 
     except Exception as e:
         raise RuntimeError(f"Failed to update Excel file: {str(e)}")
+    
+
+def bad_owner(row_data,df : pd.DataFrame,row_index):
+    
+        ownership_date = row_data.get('ownership_date', '').strip()
+        if ownership_date == '':
+            return True
+        if ownership_date == '000000':
+            return True
+        report_date = df.iat[row_index, 1]
+     
+    
+        # Convert "Report Date" to datetime object
+        report_date_clean = datetime.datetime.strptime(report_date, "%d.%m.%Y")
+    
+        # Convert "Ownership Date" to datetime object
+        # Assuming the year is in the 2000s
+        ownership_date_clean = datetime.datetime.strptime(ownership_date, "%d%m%y")
+        #print after conversion
+        print(f"comparing Report Date: {report_date_clean}, Ownership Date: {ownership_date_clean}")
+        if ownership_date_clean > report_date_clean:
+            return True
+        return False
+

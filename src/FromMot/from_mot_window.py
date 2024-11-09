@@ -48,11 +48,15 @@ class MOTWindow:
                 self.window.destroy()
                 return
             else:
+                print(f"Rules file loaded successfully: {rules_file}")
+                print(f"Columns: {self.rules_df.columns}")
                 # Initialize output_text after rules are successfully loaded
                 self.output_text = scrolledtext.ScrolledText(self.window, height=10, width=50)
                 self.output_text.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky='nsew')
+                # get all values from the B col into a list
+              
+                self.rules_list = self.rules_df.iloc[:,1].dropna().astype(str).tolist()
                 self.output_text.insert(tk.END, "קובץ סיווג עבירות למכתב נטען בהצלחה.\n")
-                self.rules_list = self.rules_df['B'].dropna().astype(str).tolist()
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load '{rules_file}': {str(e)}")
             self.window.destroy()
@@ -189,7 +193,7 @@ class MOTWindow:
                 messagebox.showerror("Path Error", "Excel file path is not set.")
                 return
             try:
-                if self.full_df and self.output_folder is not None:
+                if self.full_df is not None and self.output_folder is not None:
                     self.full_df = process_zip_files(folder_path, self.full_df,self.output_folder)
                 self.output_text.insert(tk.END, "ZIP folder processed successfully.\n")
                 self.current_step = 3
