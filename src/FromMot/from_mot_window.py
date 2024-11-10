@@ -10,7 +10,7 @@ from src.FromMot.data_to_excel_file import transfer_data_to_excel
 from src.FromMot.file_handling import process_zip_files
 import os
 import pandas as pd
-
+from src.FromMot.stats.stats import StatsExcelExporter
 
 class MOTWindow:
     def __init__(self, root: tk.Tk) -> None:
@@ -215,6 +215,7 @@ class MOTWindow:
             return
         export_path: str = os.path.join(self.output_folder, new_file_name)
 
+        StatsExcelExporter(data_to_export, export_path).create_stats_excel()
 
         try:
             for column,new_name in NEW_COLUMN_NAMES.items():
