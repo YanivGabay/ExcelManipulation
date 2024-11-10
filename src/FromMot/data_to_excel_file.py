@@ -131,6 +131,8 @@ def bad_owner(row_data,df : pd.DataFrame,row_index):
         
         if ownership_date_clean > report_date_clean:
             print(f"found bad: Report Date: {report_date_clean}, Ownership Date: {ownership_date_clean}")
+            #add this value to the df at the row_index
+            df.at[row_index, 'report_vs_owner'] = f"Report Date: {report_date_clean}, Ownership Date: {ownership_date_clean}"
             return True
         return False
 

@@ -206,6 +206,8 @@ class MOTWindow:
     def export_output_file(self, df: pd.DataFrame) -> None:
               
         data_to_export: pd.DataFrame = df
+        bad_values_df = data_to_export[data_to_export['BAD RECORD'] == True].copy()
+        data_to_export = data_to_export[data_to_export['BAD RECORD'] != True].copy()
         today: str = pd.Timestamp.today().strftime("%Y-%m-%d")
         new_file_name: str = f"output_{today}.xlsx"
          
@@ -218,9 +220,10 @@ class MOTWindow:
             for column,new_name in NEW_COLUMN_NAMES.items():
                 new_col_index = ord(column) - ord('A')  # Convert letter to 0-based index
                 data_to_export.columns.values[new_col_index] = new_name
+                bad_values_df.columns.values[new_col_index] = new_name
             data_to_export.to_excel(export_path, index=False)
             messagebox.showinfo("Success", "קובץ סופי יוצר בהצלחה.")
-            
+            bad_values_df.to_excel(export_path.replace('.xlsx','_bad.xlsx'), index=False)
             # Optionally open the folder
             if messagebox.askyesno("Open Folder", "האם מעוניין שאפתח את התיקייה שבה נשמר הקובץ?"):
                 os.startfile(os.path.dirname(export_path))
