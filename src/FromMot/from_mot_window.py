@@ -27,7 +27,7 @@ class MOTWindow:
         self.setup_gui()
 
     def setup_gui(self) -> None:
-        """Set up the GUI components."""
+     
         # Create a new top-level window
         self.window: tk.Toplevel = tk.Toplevel(self.root)
         self.window.title("FROM MOT Processing/ממשרד התחבורה")
@@ -97,7 +97,7 @@ class MOTWindow:
         self.update_button_states()
 
     def update_button_states(self) -> None:
-        """Enable or disable buttons based on the current step."""
+      
         states = ['normal', 'disabled']
         self.text_file_btn.config(state=states[self.current_step != 0])
         self.excel_file_btn.config(state=states[self.current_step != 1])
@@ -106,7 +106,7 @@ class MOTWindow:
         self.exit_btn.config(state=states[self.current_step != 4])
 
     def upload_text_file(self) -> None:
-        """Handle the upload of a text file."""
+ 
         file_path: str = filedialog.askopenfilename(
             title="בחר את קובץ הטקסט ממשרד התחבורה",
             filetypes=[("Text files", "*.txt")],
@@ -129,7 +129,7 @@ class MOTWindow:
             messagebox.showerror("Encoding Error", "Failed to decode the text file with available encodings.")
 
     def upload_excel_file(self) -> None:
-        """Handle the upload of an Excel file."""
+      
         if self.current_step != 1:
             messagebox.showerror("Step Error", "Please upload the text file first!")
             return
@@ -183,7 +183,7 @@ class MOTWindow:
                 self.output_text.insert(tk.END, f"Error: {str(e)}\n")
 
     def select_zip_folder(self) -> None:
-        """Handle the selection of a ZIP folder."""
+
         if self.current_step != 2:
             messagebox.showerror("Step Error", "Please upload the Excel file first!")
             return
@@ -214,8 +214,8 @@ class MOTWindow:
         if self.output_folder is None:
             return
         export_path: str = os.path.join(self.output_folder, new_file_name)
-
-        StatsExcelExporter(data_to_export, export_path).create_stats_excel()
+        # to enable the stats excel exporter to provide statistics
+       # StatsExcelExporter(data_to_export, export_path).create_stats_excel()
 
         try:
             for column,new_name in NEW_COLUMN_NAMES.items():
@@ -244,7 +244,7 @@ class MOTWindow:
         
 
     def exit_program(self) -> None:
-        """Exit the program, optionally opening the Excel file's directory."""
+       
         if self.excel_file_path and messagebox.askyesno(
             "Open Folder",
             "האם מעוניין שאפתח את התיקייה המכילה את קובץ האקסל?"
@@ -261,5 +261,5 @@ class MOTWindow:
 
 
 def open_from_mot_window(root: tk.Tk) -> None:
-    """Function to open the MOTWindow."""
+    
     MOTWindow(root)

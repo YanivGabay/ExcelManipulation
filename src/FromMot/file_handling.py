@@ -6,15 +6,7 @@ from typing import Any, Dict, List
 
 
 def process_zip_files(folder_path: str, full_df: pd.DataFrame, output_folder: str) -> pd.DataFrame:
-    """
-    Args:
-        folder_path (str): Path to the directory containing ZIP files.
-      
-        output_folder (str): Path to the directory where extracted contents will be stored.
-
-    Raises:
-        RuntimeError: If extraction or processing of any ZIP file fails.
-    """
+ 
     if full_df is None:
         raise ValueError("The DataFrame 'full_df' cannot be None.")
     
@@ -39,19 +31,7 @@ def process_zip_files(folder_path: str, full_df: pd.DataFrame, output_folder: st
     return df
 
 def extract_zip_files(zip_path: str, extract_path: str) -> None:
-    """
-    Extracts a ZIP file to the specified extraction path.
-
-    Args:
-        zip_path (str): Path to the ZIP file to be extracted.
-        extract_path (str): Directory where the ZIP contents will be extracted.
-
-    Raises:
-        zipfile.BadZipFile: If the ZIP file is corrupted or not a valid ZIP file.
-        FileNotFoundError: If the ZIP file does not exist.
-        PermissionError: If the extraction path is not writable.
-        Exception: For any other unforeseen errors during extraction.
-    """
+ 
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_path)
@@ -76,20 +56,7 @@ def convert_rename_image(root,file_path,zip_file_name,suffix):
                     return new_file_name
 
 def clean_and_process_files(extract_path: str, zip_file_name: str, full_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Processes files in the extracted directory by deleting unnecessary files,
-    converting images, and updating the Excel file based on the processed files.
-
-    Args:
-        extract_path (str): Path to the extracted directory for the current ZIP file.
-        zip_file_name (str): Name of the ZIP file (used for matching records in the Excel file).
-        excel_file_path (str): Path to the Excel file to be updated.
-
-    Raises:
-        FileNotFoundError: If the Excel file does not exist.
-        KeyError: If expected columns are missing in the Excel file.
-        Exception: For any other unforeseen errors during processing.
-    """
+ 
     df = full_df.copy()
     # Column indices (0-based)
     id_of_report = 0       # Assuming column 'A' (index 0) is מפתח זיהוי (ID of report)

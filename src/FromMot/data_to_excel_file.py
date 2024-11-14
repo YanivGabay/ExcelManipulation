@@ -8,7 +8,7 @@ import tkinter as tk
 
 
 def standardize_vehicle_number(vehicle_number: Any, length: int = 8) -> str:
-    """Standardize the vehicle number to ensure it has the correct number of digits."""
+  
     return str(vehicle_number).zfill(length)
 
 
@@ -20,7 +20,7 @@ def update_excel_row(
     rules_df: pd.DataFrame,
     rules_list: List[str],
 ) -> int:
-    """Update Excel row with data from the record based on a mapping."""
+
     updates_made = 0
     for field, excel_col_index in EXCEL_COLUMN_MAPPING.items():
         if field in record:
@@ -63,16 +63,7 @@ def transfer_data_to_excel(
     rules_list: List[str],
     
 ) -> Tuple[int, int, List[str],pd.DataFrame]:
-    """
-    Transfer data to Excel based on provided text records and rules.
 
-    Returns:
-        Tuple containing:
-            - Number of rows updated.
-            - Total number of rows processed.
-            - List of unmatched vehicle numbers.
-            - Updated DataFrame.
-    """
     try:
         df = pd.read_excel(file_path, dtype=str)
         vehicle_number_col_index = 10  # Adjust as needed for the correct column index for vehicle numbers
