@@ -215,7 +215,7 @@ class MOTWindow:
             return
         export_path: str = os.path.join(self.output_folder, new_file_name)
         # to enable the stats excel exporter to provide statistics
-       # StatsExcelExporter(data_to_export, export_path).create_stats_excel()
+        StatsExcelExporter(data_to_export, export_path).create_stats_excel()
 
         try:
             for column,new_name in NEW_COLUMN_NAMES.items():
