@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Tuple
 from src.FromMot.text_processing import reverse_word_if_hebrew
 from constants import EXCEL_COLUMN_MAPPING, RULES_COLUMN_MAPPING
 import tkinter as tk
-
+from constants import BAD_COLUMN_NAME, BAD_COLUMN_REASON
 
 def standardize_vehicle_number(vehicle_number: Any, length: int = 8) -> str:
   
@@ -87,13 +87,12 @@ def transfer_data_to_excel(
                         rows_updated += 1
                     
                     if bad_owner(record,df,row_index):
-                        df.at[row_index, 'BAD RECORD'] = True
+                        df.at[row_index,BAD_COLUMN_NAME ] = True
+                        df.at[row_index,BAD_COLUMN_REASON] = "Ownership Date is after Report Date"
             else:
                 unmatched_vehicles.append(vehicle_number_from_record)
 
-            # now we need to check if the ownership date inside the record, is smaller than the report date which is in the df
-            # if it isnt, we create a new col called BAD RECORD and put the value inside to true
-          #("ownership_date", 156, 6),
+      
                         
 
         return rows_updated, total_rows, unmatched_vehicles,df

@@ -11,6 +11,7 @@ from src.FromMot.file_handling import process_zip_files
 import os
 import pandas as pd
 from src.FromMot.stats.stats import StatsExcelExporter
+from constants import BAD_COLUMN_NAME, BAD_COLUMN_REASON
 
 class MOTWindow:
     def __init__(self, root: tk.Tk) -> None:
@@ -206,8 +207,8 @@ class MOTWindow:
     def export_output_file(self, df: pd.DataFrame) -> None:
               
         data_to_export: pd.DataFrame = df
-        bad_values_df = data_to_export[data_to_export['BAD RECORD'] == True].copy()
-        data_to_export = data_to_export[data_to_export['BAD RECORD'] != True].copy()
+        bad_values_df = data_to_export[data_to_export[BAD_COLUMN_NAME] == True].copy()
+        data_to_export = data_to_export[data_to_export[BAD_COLUMN_NAME] != True].copy()
         today: str = pd.Timestamp.today().strftime("%Y-%m-%d")
         new_file_name: str = f"output_{today}.xlsx"
          

@@ -18,7 +18,7 @@ def load_to_mot():
         content = create_text_content(df)
         # Determine the directory of the Excel file and the file name
         directory = os.path.dirname(file_path)
-        file_name = f"to_mot_{datetime.now().strftime('%Y%m%d')}.txt"
+        file_name = f"to_mot_{datetime.now().strftime('%d%m%Y')}.txt"
         full_path = os.path.join(directory, file_name)
         
         # Save the text file in the same directory as the Excel file

@@ -6,6 +6,9 @@
 COLUMN_A_INDEX = 0
 COLUMN_K_INDEX = 10
 
+BAD_COLUMN_NAME = 'BAD RECORD'
+BAD_COLUMN_REASON = 'BAD RECORD REASON'
+
 # Formatting configuration for text output
 FORMAT_CONFIG = {
     'start_code': '913',
