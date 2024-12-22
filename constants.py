@@ -30,19 +30,14 @@ RULES_COLUMN_MAPPING = {
     "F": "X",
     "G": "Y"
 }
+DROP_COLUMNS_RANGE = "AF:BB"
 
 NEW_COLUMN_NAMES = {
-    # V into כותרת
-    # W into  מלל
-    # X into סכום הקנס
-    # Y into נקודות
-
-    "V": "כותרת",
-    "W": "מלל",
-    "X": "סכום הקנס",
-    "Y": "נקודות"
-
-    }
+    21: "כותרת",
+    22: "מלל",
+    23: "סכום הקנס",
+    24: "נקודות"
+}
 
 EXCEL_COLUMN_MAPPING = {
     "full_name": 4, #E

@@ -5,7 +5,7 @@ from tkinter import filedialog, messagebox, ttk, scrolledtext
 from typing import Any, Dict, List, Optional
 from src.FromMot.text_processing import parse_text_file
 from src.FromMot.clean_records import process_record
-from constants import EXTRACTION_FORMULA,NEW_COLUMN_NAMES
+from constants import EXTRACTION_FORMULA,NEW_COLUMN_NAMES,DROP_COLUMNS_RANGE
 from src.FromMot.data_to_excel_file import transfer_data_to_excel
 from src.FromMot.file_handling import process_zip_files
 import os
@@ -211,18 +211,40 @@ class MOTWindow:
         data_to_export = data_to_export[data_to_export[BAD_COLUMN_NAME] != True].copy()
         today: str = pd.Timestamp.today().strftime("%Y-%m-%d")
         new_file_name: str = f"output_{today}.xlsx"
-         
+        print("Columns before renaming and dropping:")
+       
         if self.output_folder is None:
             return
+        
+        rename_map = {}
+        
+        if 21 < len(data_to_export.columns):
+            rename_map[data_to_export.columns[21]] = "כותרת"
+        if 22 < len(data_to_export.columns):
+            rename_map[data_to_export.columns[22]] = "מלל"
+        if 23 < len(data_to_export.columns):
+            rename_map[data_to_export.columns[23]] = "סכום הקנס"
+        if 24 < len(data_to_export.columns):
+            rename_map[data_to_export.columns[24]] = "נקודות"
+        data_to_export.rename(columns=rename_map, inplace=True)
+
+         # We'll collect these indices in one list, then drop them by *name*.
+        drop_indices = list(range(31, 54)) + list(range(56, 72))
+        # Filter out-of-bounds (in case the DataFrame has fewer columns than expected)
+        drop_indices = [i for i in drop_indices if i < len(data_to_export.columns)]
+        # Convert indices to actual column names
+        cols_to_drop = [data_to_export.columns[i] for i in drop_indices]
+        
+        data_to_export.drop(columns=cols_to_drop, inplace=True, errors='ignore')
+
         export_path: str = os.path.join(self.output_folder, new_file_name)
         # to enable the stats excel exporter to provide statistics
         StatsExcelExporter(data_to_export, export_path).create_stats_excel()
-
+       
         try:
-            for column,new_name in NEW_COLUMN_NAMES.items():
-                new_col_index = ord(column) - ord('A')  # Convert letter to 0-based index
-                data_to_export.columns.values[new_col_index] = new_name
-                bad_values_df.columns.values[new_col_index] = new_name
+            
+
+            # Export the data to an Excel file  
             data_to_export.to_excel(export_path, index=False)
             messagebox.showinfo("Success", "קובץ סופי יוצר בהצלחה.")
             bad_values_df.to_excel(export_path.replace('.xlsx','_bad.xlsx'), index=False)
